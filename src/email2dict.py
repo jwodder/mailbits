@@ -14,9 +14,15 @@ import email
 from email import policy
 from email.message import EmailMessage, Message
 
-def process_unique_addr_headers(uahs):
+def process_address(addr):
+    return {
+        "realname": addr.display_name,
+        "address": addr.addr_spec,
+    }
+
+def process_addr_headers(ahs):
     data = []
-    for h in uahs:
+    for h in ahs:
         for g in h.groups:
             if g.display_name is not None:
                 group = {"group": g.display_name, "addresses": []}
@@ -24,26 +30,57 @@ def process_unique_addr_headers(uahs):
                 addrlist = group["addresses"]
             else:
                 addrlist = data
-            for a in g.addresses:
-                addrlist.append(
-                    {
-                        "realname": a.display_name,
-                        "address": a.addr_spec,
-                    }
-                )
+            addrlist.extend(map(process_address, g.addresses))
     return data
 
 def process_content_type_headers(cths):
     # Discard params
-    return unlist([h.content_type for h in cths])
+    ### TODO: Filter out certain params instead?
+    assert len(cths) == 1
+    return cths[0].content_type
 
+def process_date_headers(dh):
+    return [h.datetime for h in dh]
+
+def process_unique_date_header(dh):
+    assert len(dh) == 1
+    return dh[0].datetime
+
+def process_unique_single_addr_header(ah):
+    assert len(ah) == 1
+    return process_address(ah[0].address)
+
+def process_single_addr_header(ah):
+    return [process_address(h.address) for h in ah]
+
+def process_content_disposition_header(cdh):
+    assert len(cdh) == 1
+    data = {
+        "disposition": cdh[0].content_disposition
+    }
+    if cdh[0].params:
+        data["params"] = dict(cdh[0].params)
+    return data
 
 HEADER_PROCESSORS = {
-    "from": process_unique_addr_headers,
-    "to": process_unique_addr_headers,
-    "cc": process_unique_addr_headers,
-    "bcc": process_unique_addr_headers,
+    # "subject:" str,
+    # "message-id": str,
+    "from": process_addr_headers,
+    "to": process_addr_headers,
+    "cc": process_addr_headers,
+    "bcc": process_addr_headers,
     "content-type": process_content_type_headers,
+    "date": process_unique_date_header,
+    "resent-date": process_date_headers,
+    "orig-date": process_unique_date_header,
+    "resent-to": process_addr_headers,
+    "resent-cc": process_addr_headers,
+    "resent-bcc": process_addr_headers,
+    "resent-from": process_addr_headers,
+    "reply-to": process_addr_headers,
+    "sender": process_unique_single_addr_header,
+    "resent-sender": process_single_addr_header,
+    "content-disposition": process_content_disposition_header,
 }
 
 SKIPPED_HEADERS = {
