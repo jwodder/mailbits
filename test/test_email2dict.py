@@ -31,6 +31,7 @@ def test_simple():
                     "address": "me@here.qq",
                 },
             ],
+            "content-type": "text/plain",
         },
         "content": BODY,
     }

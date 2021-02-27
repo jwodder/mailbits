@@ -13,33 +13,42 @@ __url__          = 'https://github.com/jwodder/email2dict'
 import email
 from email import policy
 from email.message import EmailMessage, Message
-from typing import Any
 
-def process_unique_addr_header(uah):
+def process_unique_addr_headers(uahs):
     data = []
-    for g in uah.groups:
-        if g.display_name is not None:
-            group = {"group": g.display_name, "addresses": []}
-            data.append(group)
-            addrlist = group["addresses"]
-        else:
-            addrlist = data
-        for a in g.addresses:
-            addrlist.append(
-                {
-                    "realname": a.display_name,
-                    "address": a.addr_spec,
-                }
-            )
+    for h in uahs:
+        for g in h.groups:
+            if g.display_name is not None:
+                group = {"group": g.display_name, "addresses": []}
+                data.append(group)
+                addrlist = group["addresses"]
+            else:
+                addrlist = data
+            for a in g.addresses:
+                addrlist.append(
+                    {
+                        "realname": a.display_name,
+                        "address": a.addr_spec,
+                    }
+                )
     return data
+
+def process_content_type_headers(cths):
+    # Discard params
+    return unlist([h.content_type for h in cths])
 
 
 HEADER_PROCESSORS = {
-    "subject": str,
-    "from": process_unique_addr_header,
-    "to": process_unique_addr_header,
-    "cc": process_unique_addr_header,
-    "bcc": process_unique_addr_header,
+    "from": process_unique_addr_headers,
+    "to": process_unique_addr_headers,
+    "cc": process_unique_addr_headers,
+    "bcc": process_unique_addr_headers,
+    "content-type": process_content_type_headers,
+}
+
+SKIPPED_HEADERS = {
+    "content-transfer-encoding",
+    "mime-version",
 }
 
 def email2dict(msg: Message) -> dict:
@@ -48,15 +57,16 @@ def email2dict(msg: Message) -> dict:
     data = {"headers": {}}
     for header in msg:
         header = header.lower()
-        value: Any
-        value = msg.get_all(header)
-        assert isinstance(value, list)
-        if len(value) == 1:
-            value = value[0]
-        elif not value:
+        if header in SKIPPED_HEADERS:
             continue
-        data["headers"][header] = value
-    data["content-type"] = msg.get_content_type()
+        values = msg.get_all(header)
+        if not values:
+            continue
+        elif header in HEADER_PROCESSORS:
+            v = HEADER_PROCESSORS[header](values)
+        else:
+            v = unlist(list(map(str, values)))
+        data["headers"][header] = v
     if msg.is_multipart():
         data["content"] = list(map(email2dict, msg.iter_parts()))
     else:
@@ -65,3 +75,6 @@ def email2dict(msg: Message) -> dict:
 
 def message2email(msg: Message) -> EmailMessage:
     return email.message_from_bytes(bytes(msg), policy=policy.default)
+
+def unlist(x):
+    return x[0] if len(x) == 1 else x
