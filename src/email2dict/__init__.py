@@ -17,12 +17,26 @@ __author_email__ = 'email2dict@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/email2dict'
 
-from datetime import datetime
+from   datetime      import datetime
 import email
-from email import headerregistry as hr
-from email import policy
-from email.message import EmailMessage, Message
-from typing import Any, Dict, List, Optional, TypedDict, cast
+from   email         import headerregistry as hr
+from   email         import policy
+from   email.message import EmailMessage, Message
+import sys
+from   typing        import Any, Dict, List, Optional, TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    if sys.version_info[:2] >= (3, 8):
+        from typing import TypedDict
+    else:
+        from typing_extensions import TypedDict
+
+    class MessageDict(TypedDict):
+        headers: Dict[str, Any]
+        preamble: Optional[str]
+        content: Any
+        epilogue: Optional[str]
+
 
 __all__ = ["email2dict"]
 
@@ -116,13 +130,7 @@ SKIPPED_HEADERS = {
     "mime-version",
 }
 
-class MessageDict(TypedDict):
-    headers: Dict[str, Any]
-    preamble: Optional[str]
-    content: Any
-    epilogue: Optional[str]
-
-def email2dict(msg: Message) -> MessageDict:
+def email2dict(msg: Message) -> "MessageDict":
     if not isinstance(msg, EmailMessage):
         msg = message2email(msg)
     data: MessageDict = {
