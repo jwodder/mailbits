@@ -1,6 +1,13 @@
 """
 Convert EmailMessage objects to dicts
 
+``email2dict`` converts Python ``Message`` & ``EmailMessage`` instances into
+structured ``dict``\\s.  Need to examine a ``Message`` but find the builtin
+Python API too fiddly?  Need to check that a ``Message`` has the content &
+structure you expect?  Need to compare two ``Message`` instances for equality?
+Need to pretty-print the structure of a ``Message``?  Then ``email2dict`` has
+your back.
+
 Visit <https://github.com/jwodder/email2dict> for more information.
 """
 
