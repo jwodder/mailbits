@@ -138,6 +138,7 @@ def test_text_html_attachment():
                             "content-type": "image/png",
                             "content-disposition": {
                                 "disposition": "inline",
+                                "params": {},
                             },
                             "content-id": [asparagus_cid],
                         },

@@ -78,12 +78,10 @@ def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
 def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
     assert len(cdh) == 1
     assert isinstance(cdh[0], hr.ContentDispositionHeader)
-    data: Dict[str, Any] = {
-        "disposition": cdh[0].content_disposition
+    return {
+        "disposition": cdh[0].content_disposition,
+        "params": dict(cdh[0].params),
     }
-    if cdh[0].params:
-        data["params"] = dict(cdh[0].params)
-    return data
 
 HEADER_PROCESSORS = {
     "subject": process_unique_string_header,

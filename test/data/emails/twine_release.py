@@ -118,6 +118,7 @@ data = {
                 "content-type": "text/plain",
                 "content-disposition": {
                     "disposition": "inline",
+                    "params": {},
                 },
             },
             "preamble": None,
