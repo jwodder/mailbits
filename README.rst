@@ -51,17 +51,17 @@ __ https://docs.python.org/3/library/email.examples.html
             "subject": "Ayons asperges pour le déjeuner",
             "from": [
                 {
-                    "realname": "Pepé Le Pew",
+                    "display_name": "Pepé Le Pew",
                     "address": "pepe@example.com",
                 },
             ],
             "to": [
                 {
-                    "realname": "Penelope Pussycat",
+                    "display_name": "Penelope Pussycat",
                     "address": "penelope@example.com",
                 },
                 {
-                    "realname": "Fabrette Pussycat",
+                    "display_name": "Fabrette Pussycat",
                     "address": "fabrette@example.com",
                 },
             ],
@@ -154,10 +154,10 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
 
     ``from``, ``to``, ``cc``, ``bcc``, ``resent-from``, ``resent-to``, ``resent-cc``, ``resent-bcc``, ``reply-to``
         A list of groups and/or addresses.  Addresses are represented as
-        ``dict``\s with two string fields: ``realname`` (an empty string if not
-        given) and ``address``.  Groups are represented as ``dict``\s with a
-        ``group`` field giving the name of the group and an ``addresses`` field
-        giving a list of addresses in the group.
+        ``dict``\s with two string fields: ``display_name`` (an empty string if
+        not given) and ``address``.  Groups are represented as ``dict``\s with
+        a ``group`` field giving the name of the group and an ``addresses``
+        field giving a list of addresses in the group.
 
     ``message-id``
         A single string

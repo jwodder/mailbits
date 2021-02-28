@@ -4,7 +4,7 @@ data = {
     "headers": {
         "from": [
             {
-                "realname": "Pete",
+                "display_name": "Pete",
                 "address": "pete@silly.example",
             },
         ],
@@ -13,15 +13,15 @@ data = {
                 "group": "A Group",
                 "addresses": [
                     {
-                        "realname": "Ed Jones",
+                        "display_name": "Ed Jones",
                         "address": "c@a.test",
                     },
                     {
-                        "realname": "",
+                        "display_name": "",
                         "address": "joe@where.test",
                     },
                     {
-                        "realname": "John",
+                        "display_name": "John",
                         "address": "jdoe@one.test",
                     },
                 ],

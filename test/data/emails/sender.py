@@ -4,17 +4,17 @@ data = {
     "headers": {
         "from": [
             {
-                "realname": "John Doe",
+                "display_name": "John Doe",
                 "address": "jdoe@machine.example",
             },
         ],
         "sender": {
-            "realname": "Michael Jones",
+            "display_name": "Michael Jones",
             "address": "mjones@machine.example",
         },
         "to": [
             {
-                "realname": "Mary Smith",
+                "display_name": "Mary Smith",
                 "address": "mary@example.net",
             },
         ],

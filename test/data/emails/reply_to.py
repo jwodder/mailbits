@@ -4,19 +4,19 @@ data = {
     "headers": {
         "from": [
             {
-                "realname": "Mary Smith",
+                "display_name": "Mary Smith",
                 "address": "mary@example.net",
             },
         ],
         "to": [
             {
-                "realname": "John Doe",
+                "display_name": "John Doe",
                 "address": "jdoe@machine.example",
             },
         ],
         "reply-to": [
             {
-                "realname": "Mary Smith: Personal Account",
+                "display_name": "Mary Smith: Personal Account",
                 "address": "smith@home.example",
             },
         ],

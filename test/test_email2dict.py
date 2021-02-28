@@ -32,13 +32,13 @@ def test_simple():
             "subject": "Meet me",
             "to": [
                 {
-                    "realname": "",
+                    "display_name": "",
                     "address": "my.beloved@love.love",
                 },
             ],
             "from": [
                 {
-                    "realname": "",
+                    "display_name": "",
                     "address": "me@here.qq",
                 },
             ],
@@ -93,17 +93,17 @@ def test_text_html_attachment():
             "subject": "Ayons asperges pour le déjeuner",
             "from": [
                 {
-                    "realname": "Pepé Le Pew",
+                    "display_name": "Pepé Le Pew",
                     "address": "pepe@example.com",
                 },
             ],
             "to": [
                 {
-                    "realname": "Penelope Pussycat",
+                    "display_name": "Penelope Pussycat",
                     "address": "penelope@example.com",
                 },
                 {
-                    "realname": "Fabrette Pussycat",
+                    "display_name": "Fabrette Pussycat",
                     "address": "fabrette@example.com",
                 },
             ],

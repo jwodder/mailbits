@@ -56,7 +56,7 @@ data = {
         ],
         "from": [
             {
-                "realname": "Brian Rutledge",
+                "display_name": "Brian Rutledge",
                 "address": "bhrutledge@gmail.com",
             }
         ],
@@ -64,7 +64,7 @@ data = {
         "message-id": "<CAKQj8i4mZQGGtmLe+rHAZNBXNv2Hw6dg5cHtzQL6e71mnZkanA@mail.gmail.com>",
         "to": [
             {
-                "realname": "",
+                "display_name": "",
                 "address": "distutils-sig@python.org",
             },
         ],

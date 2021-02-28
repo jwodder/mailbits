@@ -46,7 +46,7 @@ def process_unique_string_header(ush: List[Any]) -> str:
 
 def process_address(addr: hr.Address) -> Dict[str, str]:
     return {
-        "realname": addr.display_name,
+        "display_name": addr.display_name,
         "address": addr.addr_spec,
     }
 

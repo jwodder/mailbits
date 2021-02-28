@@ -4,13 +4,13 @@ data = {
     "headers": {
         "resent-from": [
             {
-                "realname": "Mary Smith",
+                "display_name": "Mary Smith",
                 "address": "mary@example.net",
             },
         ],
         "resent-to": [
             {
-                "realname": "Jane Brown",
+                "display_name": "Jane Brown",
                 "address": "j-brown@other.example",
             },
         ],
@@ -22,13 +22,13 @@ data = {
         ],
         "from": [
             {
-                "realname": "John Doe",
+                "display_name": "John Doe",
                 "address": "jdoe@machine.example",
             },
         ],
         "to": [
             {
-                "realname": "Mary Smith",
+                "display_name": "Mary Smith",
                 "address": "mary@example.net",
             },
         ],
