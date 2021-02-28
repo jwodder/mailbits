@@ -17,6 +17,8 @@ from email import policy
 from email.message import EmailMessage, Message
 from typing import Any, Dict, List, cast
 
+__all__ = ["email2dict"]
+
 def process_unique_string_header(ush: List[Any]) -> str:
     assert len(ush) == 1
     return str(ush[0])
