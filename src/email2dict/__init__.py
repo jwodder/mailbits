@@ -10,56 +10,73 @@ __author_email__ = 'email2dict@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/email2dict'
 
+from datetime import datetime
 import email
+from email import headerregistry as hr
 from email import policy
 from email.message import EmailMessage, Message
+from typing import Any, Dict, List, cast
 
-def process_unique_string_header(ush):
+def process_unique_string_header(ush: List[Any]) -> str:
     assert len(ush) == 1
     return str(ush[0])
 
-def process_address(addr):
+def process_address(addr: hr.Address) -> Dict[str, str]:
     return {
         "realname": addr.display_name,
         "address": addr.addr_spec,
     }
 
-def process_addr_headers(ahs):
-    data = []
+def process_addr_headers(ahs: List[Any]) -> List[dict]:
+    data: List[dict] = []
     for h in ahs:
+        assert isinstance(h, hr.AddressHeader)
         for g in h.groups:
+            addrlist: List[dict]
             if g.display_name is not None:
                 group = {"group": g.display_name, "addresses": []}
                 data.append(group)
-                addrlist = group["addresses"]
+                addrlist = cast(List[dict], group["addresses"])
             else:
                 addrlist = data
             addrlist.extend(map(process_address, g.addresses))
     return data
 
-def process_content_type_headers(cths):
+def process_content_type_headers(cths: List[Any]) -> str:
     # Discard params
     ### TODO: Filter out certain params instead?
     assert len(cths) == 1
+    assert isinstance(cths[0], hr.ContentTypeHeader)
     return cths[0].content_type
 
-def process_date_headers(dh):
-    return [h.datetime for h in dh]
+def process_date_headers(dh: List[Any]) -> List[datetime]:
+    data = []
+    for h in dh:
+        assert isinstance(h, hr.DateHeader)
+        data.append(h.datetime)
+    return data
 
-def process_unique_date_header(dh):
+def process_unique_date_header(dh: List[Any]) -> datetime:
     assert len(dh) == 1
+    assert isinstance(dh[0], hr.UniqueDateHeader)
     return dh[0].datetime
 
-def process_unique_single_addr_header(ah):
+def process_unique_single_addr_header(ah: List[Any]) -> Dict[str, str]:
     assert len(ah) == 1
+    assert isinstance(ah[0], hr.UniqueSingleAddressHeader)
     return process_address(ah[0].address)
 
-def process_single_addr_header(ah):
-    return [process_address(h.address) for h in ah]
+def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
+    data = []
+    for h in ah:
+        assert isinstance(h, hr.SingleAddressHeader)
+        data.append(process_address(h.address))
+    return data
 
-def process_content_disposition_header(cdh):
+def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
     assert len(cdh) == 1
-    data = {
+    assert isinstance(cdh[0], hr.ContentDispositionHeader)
+    data: Dict[str, Any] = {
         "disposition": cdh[0].content_disposition
     }
     if cdh[0].params:
@@ -92,11 +109,11 @@ SKIPPED_HEADERS = {
     "mime-version",
 }
 
-def email2dict(msg: Message) -> dict:
+def email2dict(msg: Message) -> Dict[str, Any]:
     if not isinstance(msg, EmailMessage):
         msg = message2email(msg)
-    data = {"headers": {}}
-    for header in msg:
+    data: Dict[str, Any] = {"headers": {}}
+    for header in msg.keys():
         header = header.lower()
         if header in SKIPPED_HEADERS:
             continue
@@ -117,4 +134,6 @@ def email2dict(msg: Message) -> dict:
     return data
 
 def message2email(msg: Message) -> EmailMessage:
-    return email.message_from_bytes(bytes(msg), policy=policy.default)
+    emsg = email.message_from_bytes(bytes(msg), policy=policy.default)
+    assert isinstance(emsg, EmailMessage)
+    return emsg
