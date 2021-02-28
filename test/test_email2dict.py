@@ -86,10 +86,7 @@ def test_text_html_attachment():
         "</html>\n"
     )
     msg.add_alternative(HTML, subtype='html')
-    # Asparagus clipart courtesy of <https://www.clipartmax.com/middle/
-    # m2i8i8G6N4i8G6G6_asparagus-clip-art-free-clip-art-asparagus/>
-    with (DATA_DIR / "asparagus.png").open("rb") as fp:
-        IMG = fp.read()
+    IMG = b'\1\2\3\4\5'
     msg.get_payload()[1].add_related(IMG, 'image', 'png', cid=asparagus_cid)
     assert email2dict(msg) == {
         "headers": {
