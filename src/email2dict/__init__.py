@@ -22,7 +22,7 @@ import email
 from email import headerregistry as hr
 from email import policy
 from email.message import EmailMessage, Message
-from typing import Any, Dict, List, cast
+from typing import Any, Dict, List, Optional, TypedDict, cast
 
 __all__ = ["email2dict"]
 
@@ -116,10 +116,21 @@ SKIPPED_HEADERS = {
     "mime-version",
 }
 
-def email2dict(msg: Message) -> Dict[str, Any]:
+class MessageDict(TypedDict):
+    headers: Dict[str, Any]
+    preamble: Optional[str]
+    content: Any
+    epilogue: Optional[str]
+
+def email2dict(msg: Message) -> MessageDict:
     if not isinstance(msg, EmailMessage):
         msg = message2email(msg)
-    data: Dict[str, Any] = {"headers": {}}
+    data: MessageDict = {
+        "headers": {},
+        "preamble": None,
+        "content": None,
+        "epilogue": None,
+    }
     for header in msg.keys():
         header = header.lower()
         if header in SKIPPED_HEADERS:
