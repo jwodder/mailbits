@@ -14,6 +14,10 @@ import email
 from email import policy
 from email.message import EmailMessage, Message
 
+def process_unique_string_header(ush):
+    assert len(ush) == 1
+    return str(ush[0])
+
 def process_address(addr):
     return {
         "realname": addr.display_name,
@@ -63,8 +67,8 @@ def process_content_disposition_header(cdh):
     return data
 
 HEADER_PROCESSORS = {
-    # "subject:" str,
-    # "message-id": str,
+    "subject": process_unique_string_header,
+    "message-id": process_unique_string_header,
     "from": process_addr_headers,
     "to": process_addr_headers,
     "cc": process_addr_headers,
@@ -102,7 +106,7 @@ def email2dict(msg: Message) -> dict:
         elif header in HEADER_PROCESSORS:
             v = HEADER_PROCESSORS[header](values)
         else:
-            v = unlist(list(map(str, values)))
+            v = list(map(str, values))
         data["headers"][header] = v
     data["preamble"] = msg.preamble
     if msg.is_multipart():
@@ -114,6 +118,3 @@ def email2dict(msg: Message) -> dict:
 
 def message2email(msg: Message) -> EmailMessage:
     return email.message_from_bytes(bytes(msg), policy=policy.default)
-
-def unlist(x):
-    return x[0] if len(x) == 1 else x

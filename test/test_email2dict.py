@@ -1,10 +1,16 @@
+import email
+from email import policy
 from email.headerregistry import Address
 from email.message import EmailMessage
 from email.utils import make_msgid
+from importlib import import_module
+from operator import attrgetter
 from pathlib import Path
+import pytest
 from email2dict import email2dict
 
 DATA_DIR = Path(__file__).with_name("data")
+EMAIL_DIR = DATA_DIR / "emails"
 
 def test_simple():
     BODY = (
@@ -133,7 +139,7 @@ def test_text_html_attachment():
                             "content-disposition": {
                                 "disposition": "inline",
                             },
-                            "content-id": asparagus_cid,
+                            "content-id": [asparagus_cid],
                         },
                         "preamble": None,
                         "content": IMG,
@@ -145,3 +151,11 @@ def test_text_html_attachment():
         ],
         "epilogue": None,
     }
+
+@pytest.mark.parametrize("eml", EMAIL_DIR.glob("*.eml"), ids=attrgetter("name"))
+def test_actual_emails(eml, monkeypatch):
+    with eml.open("rb") as fp:
+        msg = email.message_from_binary_file(fp, policy=policy.default)
+    monkeypatch.syspath_prepend(EMAIL_DIR)
+    expected = import_module(eml.stem).data
+    assert email2dict(msg) == expected
