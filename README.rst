@@ -65,13 +65,19 @@ __ https://docs.python.org/3/library/email.examples.html
                     "address": "fabrette@example.com",
                 },
             ],
-            "content-type": "multipart/alternative",
+            "content-type": {
+                "content_type": "multipart/alternative",
+                "params": {},
+            },
         },
         "preamble": None,
         "content": [
             {
                 "headers": {
-                    "content-type": "text/plain"
+                    "content-type": {
+                        "content_type": "text/plain",
+                        "params": {},
+                    },
                 },
                 "preamble": None,
                 "content": (
@@ -87,13 +93,19 @@ __ https://docs.python.org/3/library/email.examples.html
             },
             {
                 "headers": {
-                    "content-type": "multipart/related",
+                    "content-type": {
+                        "content_type": "multipart/related",
+                        "params": {},
+                    },
                 },
                 "preamble": None,
                 "content": [
                     {
                         "headers": {
-                            "content-type": "text/html",
+                            "content-type": {
+                                "content_type": "text/html",
+                                "params": {},
+                            },
                         },
                         "preamble": None,
                         "content": (
@@ -115,7 +127,10 @@ __ https://docs.python.org/3/library/email.examples.html
                     },
                     {
                         "headers": {
-                            "content-type": "image/png",
+                            "content-type": {
+                                "content_type": "image/png",
+                                "params": {},
+                            },
                             "content-disposition": {
                                 "disposition": "inline",
                                 "params": {},
@@ -163,7 +178,10 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
         A single string
 
     ``content-type``
-        A string of the form ``maintype/subtype`` (e.g., "text/plain")
+        A ``dict`` containing a ``content_type`` field (a string of the form
+        ``maintype/subtype``, e.g., ``"text/plain"``) and a ``params`` field (a
+        ``dict`` of string keys & values).  Any ``charset`` and ``boundary``
+        parameters are discarded.
 
     ``date``
         A ``datetime.datetime`` instance

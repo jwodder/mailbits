@@ -42,7 +42,10 @@ def test_simple():
                     "address": "me@here.qq",
                 },
             ],
-            "content-type": "text/plain",
+            "content-type": {
+                "content_type": "text/plain",
+                "params": {},
+            },
         },
         "preamble": None,
         "content": BODY,
@@ -107,13 +110,19 @@ def test_text_html_attachment():
                     "address": "fabrette@example.com",
                 },
             ],
-            "content-type": "multipart/alternative",
+            "content-type": {
+                "content_type": "multipart/alternative",
+                "params": {},
+            },
         },
         "preamble": None,
         "content": [
             {
                 "headers": {
-                    "content-type": "text/plain"
+                    "content-type": {
+                        "content_type": "text/plain",
+                        "params": {},
+                    },
                 },
                 "preamble": None,
                 "content": TEXT,
@@ -121,13 +130,19 @@ def test_text_html_attachment():
             },
             {
                 "headers": {
-                    "content-type": "multipart/related",
+                    "content-type": {
+                        "content_type": "multipart/related",
+                        "params": {},
+                    },
                 },
                 "preamble": None,
                 "content": [
                     {
                         "headers": {
-                            "content-type": "text/html",
+                            "content-type": {
+                                "content_type": "text/html",
+                                "params": {},
+                            },
                         },
                         "preamble": None,
                         "content": HTML,
@@ -135,7 +150,10 @@ def test_text_html_attachment():
                     },
                     {
                         "headers": {
-                            "content-type": "image/png",
+                            "content-type": {
+                                "content_type": "image/png",
+                                "params": {},
+                            },
                             "content-disposition": {
                                 "disposition": "inline",
                                 "params": {},
@@ -195,13 +213,19 @@ def test_text_image_mixed():
     assert email2dict(msg) == {
         "headers": {
             "subject": "Text and an image",
-            "content-type": "multipart/mixed",
+            "content-type": {
+                "content_type": "multipart/mixed",
+                "params": {},
+            },
         },
         "preamble": None,
         "content": [
             {
                 "headers": {
-                    "content-type": "text/plain",
+                    "content-type": {
+                        "content_type": "text/plain",
+                        "params": {},
+                    },
                 },
                 "preamble": None,
                 "content": "This is part 1.\n",
@@ -209,7 +233,10 @@ def test_text_image_mixed():
             },
             {
                 "headers": {
-                    "content-type": "image/png",
+                    "content-type": {
+                        "content_type": "image/png",
+                        "params": {},
+                    },
                     "content-disposition": {
                         "disposition": "inline",
                         "params": {

@@ -84,19 +84,28 @@ data = {
         "list-post": ["<mailto:distutils-sig@python.org>"],
         "list-subscribe": ["<mailto:distutils-sig-join@python.org>"],
         "list-unsubscribe": ["<mailto:distutils-sig-leave@python.org>"],
-        "content-type": "multipart/mixed",
+        "content-type": {
+            "content_type": "multipart/mixed",
+            "params": {},
+        },
     },
     "preamble": None,
     "content": [
         {
             "headers": {
-                "content-type": "multipart/alternative",
+                "content-type": {
+                    "content_type": "multipart/alternative",
+                    "params": {},
+                },
             },
             "preamble": None,
             "content": [
                 {
                     "headers": {
-                        "content-type": "text/plain",
+                        "content-type": {
+                            "content_type": "text/plain",
+                            "params": {},
+                        },
                     },
                     "preamble": None,
                     "content": "https://pypi.org/project/twine/3.3.0/\n\nChangelog (now via towncrier):\nhttps://twine.readthedocs.io/en/latest/changelog.html\n\nNotable improvements include more `twine upload --verbose` output, and a\n`--strict` option for `twine check`.\n",
@@ -104,7 +113,10 @@ data = {
                 },
                 {
                     "headers": {
-                        "content-type": "text/html",
+                        "content-type": {
+                            "content_type": "text/html",
+                            "params": {},
+                        },
                     },
                     "preamble": None,
                     "content": "<div dir=\"ltr\"><div><a href=\"https://pypi.org/project/twine/3.3.0/\">https://pypi.org/project/twine/3.3.0/</a></div><div><br></div><div>Changelog (now via towncrier): <a href=\"https://twine.readthedocs.io/en/latest/changelog.html\">https://twine.readthedocs.io/en/latest/changelog.html</a></div><div><br></div><div>Notable improvements include more `twine upload --verbose` output, and a `--strict` option for `twine check`.</div></div>\n",
@@ -115,7 +127,10 @@ data = {
         },
         {
             "headers": {
-                "content-type": "text/plain",
+                "content-type": {
+                    "content_type": "text/plain",
+                    "params": {},
+                },
                 "content-disposition": {
                     "disposition": "inline",
                     "params": {},

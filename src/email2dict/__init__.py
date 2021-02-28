@@ -65,12 +65,20 @@ def process_addr_headers(ahs: List[Any]) -> List[dict]:
             addrlist.extend(map(process_address, g.addresses))
     return data
 
-def process_content_type_headers(cths: List[Any]) -> str:
-    # Discard params
-    ### TODO: Filter out certain params instead?
+SKIPPED_CT_PARAMS = {
+    "charset",
+    "boundary",
+}
+
+def process_content_type_headers(cths: List[Any]) -> Dict[str, Any]:
     assert len(cths) == 1
-    assert isinstance(cths[0], hr.ContentTypeHeader)
-    return cths[0].content_type
+    return {
+        "content_type": cths[0].content_type,
+        "params": {
+            k: v for k,v in cths[0].params.items()
+                 if k not in SKIPPED_CT_PARAMS
+        },
+    }
 
 def process_date_headers(dh: List[Any]) -> List[datetime]:
     data = []
