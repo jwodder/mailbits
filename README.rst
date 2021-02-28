@@ -152,7 +152,7 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
     ``subject``
         A single string
 
-    ``from``, ``to``, ``cc``, ``bcc``, ``resent-from``, ``resent-to``, ``resent-cc``, ``recent-bcc``, ``reply-to``
+    ``from``, ``to``, ``cc``, ``bcc``, ``resent-from``, ``resent-to``, ``resent-cc``, ``resent-bcc``, ``reply-to``
         A list of groups and/or addresses.  Addresses are represented as
         ``dict``\s with two string fields: ``realname`` (an empty string if not
         given) and ``address``.  Groups are represented as ``dict``\s with a
