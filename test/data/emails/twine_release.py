@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 
 data = {
@@ -143,3 +144,14 @@ data = {
     ],
     "epilogue": "",
 }
+
+data_all = deepcopy(data)
+data_all["headers"]["mime-version"] = "1.0"
+data_all["headers"]["content-type"]["params"]["boundary"] = "===============5457169869532207506=="
+data_all["content"][0]["headers"]["content-type"]["params"]["boundary"] = "00000000000008a9d405b733e1f4"
+data_all["content"][0]["content"][0]["headers"]["content-type"]["params"]["charset"] = "UTF-8"
+data_all["content"][0]["content"][1]["headers"]["content-type"]["params"]["charset"] = "UTF-8"
+data_all["content"][0]["content"][1]["headers"]["content-transfer-encoding"] = "quoted-printable"
+data_all["content"][1]["headers"]["content-type"]["params"]["charset"] = "us-ascii"
+data_all["content"][1]["headers"]["mime-version"] = "1.0"
+data_all["content"][1]["headers"]["content-transfer-encoding"] = "7bit"

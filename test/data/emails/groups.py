@@ -40,3 +40,5 @@ data = {
     "content": "Testing.\n\n-- \nTaken from RFC 5322, section A.1.3.\n",
     "epilogue": None,
 }
+
+data_all = data

@@ -22,8 +22,10 @@ import email
 from   email         import headerregistry as hr
 from   email         import policy
 from   email.message import EmailMessage, Message
+import inspect
 import sys
-from   typing        import Any, Dict, List, Optional, TYPE_CHECKING, cast
+from   typing        import Any, Callable, Dict, List, Optional, \
+                                TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     if sys.version_info[:2] >= (3, 8):
@@ -70,13 +72,14 @@ SKIPPED_CT_PARAMS = {
     "boundary",
 }
 
-def process_content_type_headers(cths: List[Any]) -> Dict[str, Any]:
+def process_content_type_headers(cths: List[Any], include_all: bool = False) \
+        -> Dict[str, Any]:
     assert len(cths) == 1
     return {
         "content_type": cths[0].content_type,
         "params": {
             k: v for k,v in cths[0].params.items()
-                 if k not in SKIPPED_CT_PARAMS
+                 if include_all or k not in SKIPPED_CT_PARAMS
         },
     }
 
@@ -112,7 +115,17 @@ def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
         "params": dict(cdh[0].params),
     }
 
-HEADER_PROCESSORS = {
+def process_cte_header(cteh: List[Any]) -> str:
+    assert len(cteh) == 1
+    assert isinstance(cteh[0], hr.ContentTransferEncodingHeader)
+    return cteh[0].cte  # TODO: When is this different from `str(cteh[0])`?
+
+def process_mime_version_header(mvh: List[Any]) -> Optional[str]:
+    assert len(mvh) == 1
+    assert isinstance(mvh[0], hr.MIMEVersionHeader)
+    return mvh[0].version
+
+HEADER_PROCESSORS: Dict[str, Callable] = {
     "subject": process_unique_string_header,
     "message-id": process_unique_string_header,
     "from": process_addr_headers,
@@ -131,6 +144,8 @@ HEADER_PROCESSORS = {
     "sender": process_unique_single_addr_header,
     "resent-sender": process_single_addr_header,
     "content-disposition": process_content_disposition_header,
+    "content-transfer-encoding": process_cte_header,
+    "mime-version": process_mime_version_header,
 }
 
 SKIPPED_HEADERS = {
@@ -138,7 +153,7 @@ SKIPPED_HEADERS = {
     "mime-version",
 }
 
-def email2dict(msg: Message) -> "MessageDict":
+def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
     if not isinstance(msg, EmailMessage):
         msg = message2email(msg)
     data: MessageDict = {
@@ -149,19 +164,26 @@ def email2dict(msg: Message) -> "MessageDict":
     }
     for header in msg.keys():
         header = header.lower()
-        if header in SKIPPED_HEADERS:
+        if header in SKIPPED_HEADERS and not include_all:
             continue
         values = msg.get_all(header)
         if not values:
             continue
-        elif header in HEADER_PROCESSORS:
-            v = HEADER_PROCESSORS[header](values)
-        else:
+        try:
+            processor = HEADER_PROCESSORS[header]
+        except KeyError:
             v = list(map(str, values))
+        else:
+            kwargs = {}
+            if takes_argument(processor, "include_all"):
+                kwargs["include_all"] = include_all
+            v = processor(values, **kwargs)
         data["headers"][header] = v
     data["preamble"] = msg.preamble
     if msg.is_multipart():
-        data["content"] = list(map(email2dict, msg.iter_parts()))
+        data["content"] = [
+            email2dict(p, include_all=include_all) for p in msg.iter_parts()
+        ]
     else:
         data["content"] = msg.get_content()
     data["epilogue"] = msg.epilogue
@@ -171,3 +193,15 @@ def message2email(msg: Message) -> EmailMessage:
     emsg = email.message_from_bytes(bytes(msg), policy=policy.default)
     assert isinstance(emsg, EmailMessage)
     return emsg
+
+def takes_argument(callable_obj: Callable, argname: str) -> bool:
+    sig = inspect.signature(callable_obj)
+    for param in sig.parameters.values():
+        if (
+            param.kind in (param.POSITIONAL_OR_KEYWORD, param.KEYWORD_ONLY)
+            and param.name == argname
+        ):
+            return True
+        elif param.kind is param.VAR_KEYWORD:
+            return True
+    return False

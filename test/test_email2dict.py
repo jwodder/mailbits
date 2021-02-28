@@ -1,3 +1,4 @@
+from copy import deepcopy
 import email
 from email import policy
 from email.headerregistry import Address
@@ -27,7 +28,7 @@ def test_simple():
     msg["To"] = "my.beloved@love.love"
     msg["From"] = "me@here.qq"
     msg.set_content(BODY)
-    assert email2dict(msg) == {
+    DICT = {
         "headers": {
             "subject": "Meet me",
             "to": [
@@ -51,6 +52,12 @@ def test_simple():
         "content": BODY,
         "epilogue": None,
     }
+    assert email2dict(msg) == DICT
+    DICT_ALL = deepcopy(DICT)
+    DICT_ALL["headers"]["content-type"]["params"]["charset"] = "utf-8"
+    DICT_ALL["headers"]["content-transfer-encoding"] = "7bit"
+    DICT_ALL["headers"]["mime-version"] = "1.0"
+    assert email2dict(msg, include_all=True) == DICT_ALL
 
 def test_text_html_attachment():
     # Adapted from <https://docs.python.org/3/library/email.examples.html>
@@ -88,7 +95,7 @@ def test_text_html_attachment():
     msg.add_alternative(HTML, subtype='html')
     IMG = b'\1\2\3\4\5'
     msg.get_payload()[1].add_related(IMG, 'image', 'png', cid=asparagus_cid)
-    assert email2dict(msg) == {
+    DICT = {
         "headers": {
             "subject": "Ayons asperges pour le déjeuner",
             "from": [
@@ -167,14 +174,26 @@ def test_text_html_attachment():
         ],
         "epilogue": None,
     }
+    assert email2dict(msg) == DICT
+    DICT_ALL = deepcopy(DICT)
+    DICT_ALL["headers"]["mime-version"] = "1.0"
+    DICT_ALL["content"][0]["headers"]["content-transfer-encoding"] = "8bit"
+    DICT_ALL["content"][0]["headers"]["content-type"]["params"]["charset"] = "utf-8"
+    DICT_ALL["content"][1]["headers"]["mime-version"] = "1.0"
+    DICT_ALL["content"][1]["content"][0]["headers"]["content-transfer-encoding"] = "quoted-printable"
+    DICT_ALL["content"][1]["content"][0]["headers"]["content-type"]["params"]["charset"] = "utf-8"
+    DICT_ALL["content"][1]["content"][1]["headers"]["mime-version"] = "1.0"
+    DICT_ALL["content"][1]["content"][1]["headers"]["content-transfer-encoding"] = "base64"
+    assert email2dict(msg, include_all=True) == DICT_ALL
 
 @pytest.mark.parametrize("eml", EMAIL_DIR.glob("*.eml"), ids=attrgetter("name"))
 def test_actual_emails(eml, monkeypatch):
     with eml.open("rb") as fp:
         msg = email.message_from_binary_file(fp, policy=policy.default)
     monkeypatch.syspath_prepend(EMAIL_DIR)
-    expected = import_module(eml.stem).data
-    assert email2dict(msg) == expected
+    module = import_module(eml.stem)
+    assert email2dict(msg) == module.data
+    assert email2dict(msg, include_all=True) == module.data_all
 
 def test_text_image_mixed():
     PNG = bytes.fromhex(
@@ -207,7 +226,7 @@ def test_text_image_mixed():
     msg.make_mixed()
     msg.attach(body)
     msg.attach(image)
-    assert email2dict(msg) == {
+    DICT = {
         "headers": {
             "subject": "Text and an image",
             "content-type": {
@@ -248,3 +267,11 @@ def test_text_image_mixed():
         ],
         "epilogue": None,
     }
+    assert email2dict(msg) == DICT
+    DICT_ALL = deepcopy(DICT)
+    DICT_ALL["content"][0]["headers"]["mime-version"] = "1.0"
+    DICT_ALL["content"][0]["headers"]["content-transfer-encoding"] = "7bit"
+    DICT_ALL["content"][0]["headers"]["content-type"]["params"]["charset"] = "utf-8"
+    DICT_ALL["content"][1]["headers"]["mime-version"] = "1.0"
+    DICT_ALL["content"][1]["headers"]["content-transfer-encoding"] = "base64"
+    assert email2dict(msg, include_all=True) == DICT_ALL

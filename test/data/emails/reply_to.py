@@ -34,3 +34,5 @@ data = {
     "content": "This is a reply to your hello.\n\n-- \nTaken from RFC 5322, section A.2.\n",
     "epilogue": None,
 }
+
+data_all = data

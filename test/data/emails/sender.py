@@ -26,3 +26,5 @@ data = {
     "content": "This is a message just to say hello.\nSo, \"Hello\".\n\n-- \nTaken from RFC 5322, section A.1.1.\n",
     "epilogue": None,
 }
+
+data_all = data

@@ -24,3 +24,5 @@ data = {
     "content": "Taken from RFC 2047, section 8.\n",
     "epilogue": None,
 }
+
+data_all = data

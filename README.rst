@@ -152,13 +152,22 @@ __ https://docs.python.org/3/library/email.examples.html
 API
 ===
 
-The ``email2dict`` module provides a single function, also named ``email2dict``:
+The ``email2dict`` module provides a single function, also named
+``email2dict``:
 
 .. code:: python
 
-    email2dict(msg: email.message.Message) -> Dict[str, Any]
+    email2dict(msg: email.message.Message, include_all: bool = False) -> Dict[str, Any]
 
-Convert a ``Message`` object to a ``dict`` with the following fields:
+Convert a ``Message`` object to a ``dict``.  All encoded text & bytes are
+decoded into their natural values.
+
+By default, any information specific to how the message is encoded (Content-Type
+parameters, Content-Transfer-Encoding, etc.) is not reported, as the focus is
+on the actual content rather than the choices made in representing it.  To
+include this information anyway, set ``include_all`` to ``True``.
+
+The output structure has the following fields:
 
 ``headers``
     A ``dict`` mapping lowercased header field names to values.  The following
@@ -180,8 +189,8 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
     ``content-type``
         A ``dict`` containing a ``content_type`` field (a string of the form
         ``maintype/subtype``, e.g., ``"text/plain"``) and a ``params`` field (a
-        ``dict`` of string keys & values).  Any ``charset`` and ``boundary``
-        parameters are discarded.
+        ``dict`` of string keys & values).  The ``charset`` and ``boundary``
+        parameters are discarded unless ``include_all`` is ``True``.
 
     ``date``
         A ``datetime.datetime`` instance
@@ -204,10 +213,12 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
         string keys & values)
 
     ``content-transfer-encoding``
-        Discarded; see below
+        A single string.  This header is discarded unless ``include_all`` is
+        ``True``.
 
     ``mime-version``
-        Discarded; see below
+        A single string.  This header is discarded unless ``include_all`` is
+        ``True``.
 
     All other headers are represented as lists of strings.
 
@@ -228,7 +239,3 @@ Convert a ``Message`` object to a ``dict`` with the following fields:
 
     __ https://docs.python.org/3/library/email.message.html
        #email.message.EmailMessage.epilogue
-
-Note that any information specific to how the message is encoded (Content-Type
-parameters, Content-Transfer-Encoding, etc.) is not reported, as the focus is
-on the actual content rather than the choices made in representing it.
