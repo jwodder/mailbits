@@ -2,6 +2,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 
 data = {
+    "unixfrom": None,
     "headers": {
         "delivered-to": ["recipient@redacted.nil"],
         "received": [
@@ -93,6 +94,7 @@ data = {
     "preamble": None,
     "content": [
         {
+            "unixfrom": None,
             "headers": {
                 "content-type": {
                     "content_type": "multipart/alternative",
@@ -102,6 +104,7 @@ data = {
             "preamble": None,
             "content": [
                 {
+                    "unixfrom": None,
                     "headers": {
                         "content-type": {
                             "content_type": "text/plain",
@@ -113,6 +116,7 @@ data = {
                     "epilogue": None,
                 },
                 {
+                    "unixfrom": None,
                     "headers": {
                         "content-type": {
                             "content_type": "text/html",
@@ -127,6 +131,7 @@ data = {
             "epilogue": "",
         },
         {
+            "unixfrom": None,
             "headers": {
                 "content-type": {
                     "content_type": "text/plain",

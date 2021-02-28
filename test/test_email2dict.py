@@ -5,6 +5,7 @@ from email.headerregistry import Address
 from email.message import EmailMessage
 from email.utils import make_msgid
 from importlib import import_module
+import mailbox
 from operator import attrgetter
 from pathlib import Path
 import pytest
@@ -12,6 +13,7 @@ from email2dict import email2dict
 
 DATA_DIR = Path(__file__).with_name("data")
 EMAIL_DIR = DATA_DIR / "emails"
+MBOX_DIR = DATA_DIR / "mboxes"
 
 def test_simple():
     BODY = (
@@ -29,6 +31,7 @@ def test_simple():
     msg["From"] = "me@here.qq"
     msg.set_content(BODY)
     DICT = {
+        "unixfrom": None,
         "headers": {
             "subject": "Meet me",
             "to": [
@@ -96,6 +99,7 @@ def test_text_html_attachment():
     IMG = b'\1\2\3\4\5'
     msg.get_payload()[1].add_related(IMG, 'image', 'png', cid=asparagus_cid)
     DICT = {
+        "unixfrom": None,
         "headers": {
             "subject": "Ayons asperges pour le déjeuner",
             "from": [
@@ -122,6 +126,7 @@ def test_text_html_attachment():
         "preamble": None,
         "content": [
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "text/plain",
@@ -133,6 +138,7 @@ def test_text_html_attachment():
                 "epilogue": None,
             },
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "multipart/related",
@@ -142,6 +148,7 @@ def test_text_html_attachment():
                 "preamble": None,
                 "content": [
                     {
+                        "unixfrom": None,
                         "headers": {
                             "content-type": {
                                 "content_type": "text/html",
@@ -153,6 +160,7 @@ def test_text_html_attachment():
                         "epilogue": None,
                     },
                     {
+                        "unixfrom": None,
                         "headers": {
                             "content-type": {
                                 "content_type": "image/png",
@@ -195,6 +203,17 @@ def test_actual_emails(eml, monkeypatch):
     assert email2dict(msg) == module.data
     assert email2dict(msg, include_all=True) == module.data_all
 
+@pytest.mark.parametrize("mbox", MBOX_DIR.glob("*.mbox"), ids=attrgetter("name"))
+def test_actual_mboxes(mbox, monkeypatch):
+    box = mailbox.mbox(mbox)
+    box.lock()
+    msg, = box
+    box.close()
+    monkeypatch.syspath_prepend(MBOX_DIR)
+    module = import_module(mbox.stem)
+    assert email2dict(msg) == module.data
+    assert email2dict(msg, include_all=True) == module.data_all
+
 def test_text_image_mixed():
     PNG = bytes.fromhex(
         '89 50 4e 47 0d 0a 1a 0a  00 00 00 0d 49 48 44 52'
@@ -227,6 +246,7 @@ def test_text_image_mixed():
     msg.attach(body)
     msg.attach(image)
     DICT = {
+        "unixfrom": None,
         "headers": {
             "subject": "Text and an image",
             "content-type": {
@@ -237,6 +257,7 @@ def test_text_image_mixed():
         "preamble": None,
         "content": [
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "text/plain",
@@ -248,6 +269,7 @@ def test_text_image_mixed():
                 "epilogue": None,
             },
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "image/png",

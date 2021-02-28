@@ -47,6 +47,7 @@ __ https://docs.python.org/3/library/email.examples.html
 .. code:: python
 
     {
+        "unixfrom": None,
         "headers": {
             "subject": "Ayons asperges pour le déjeuner",
             "from": [
@@ -73,6 +74,7 @@ __ https://docs.python.org/3/library/email.examples.html
         "preamble": None,
         "content": [
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "text/plain",
@@ -92,6 +94,7 @@ __ https://docs.python.org/3/library/email.examples.html
                 "epilogue": None,
             },
             {
+                "unixfrom": None,
                 "headers": {
                     "content-type": {
                         "content_type": "multipart/related",
@@ -101,6 +104,7 @@ __ https://docs.python.org/3/library/email.examples.html
                 "preamble": None,
                 "content": [
                     {
+                        "unixfrom": None,
                         "headers": {
                             "content-type": {
                                 "content_type": "text/html",
@@ -126,6 +130,7 @@ __ https://docs.python.org/3/library/email.examples.html
                         "epilogue": None,
                     },
                     {
+                        "unixfrom": None,
                         "headers": {
                             "content-type": {
                                 "content_type": "image/png",
@@ -168,6 +173,9 @@ on the actual content rather than the choices made in representing it.  To
 include this information anyway, set ``include_all`` to ``True``.
 
 The output structure has the following fields:
+
+``unixfrom``
+    The "From " line marking the start of the message in a mbox, if any
 
 ``headers``
     A ``dict`` mapping lowercased header field names to values.  The following

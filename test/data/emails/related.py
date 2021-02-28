@@ -1,6 +1,7 @@
 from copy import deepcopy
 
 data = {
+    "unixfrom": None,
     "headers": {
         "content-type": {
             "content_type": "multipart/related",
@@ -17,6 +18,7 @@ data = {
     "preamble": None,
     "content": [
         {
+            "unixfrom": None,
             "headers": {
                 "content-type": {
                     "content_type": "application/x-fixedrecord",
@@ -31,6 +33,7 @@ data = {
             "epilogue": None,
         },
         {
+            "unixfrom": None,
             "headers": {
                 "content-type": {
                     "content_type": "application/octet-stream",

@@ -1,0 +1,106 @@
+From 0101017629c51320-4f67ae0a-8056-4cd7-b526-e47da4bbe7b7-000000@ses.pypi.org  Thu Dec  3 18:07:47 2020
+Return-Path: <0101017629c51320-4f67ae0a-8056-4cd7-b526-e47da4bbe7b7-000000@ses.pypi.org>
+X-Original-To: recipient@redacted.nil
+Delivered-To: recipient@redacted.nil
+X-Greylist: delayed 316 seconds by postgrey-1.36 at firefly; Thu, 03 Dec 2020 18:07:47 UTC
+Authentication-Results: mail.redacted.nil;
+	dkim=pass (1024-bit key; unprotected) header.d=pypi.org header.i=@pypi.org header.a=rsa-sha256 header.s=sy4yaueax2wxeqvbwtfafsfpuli4zspd header.b=RopfsgK8;
+	dkim=pass (1024-bit key; unprotected) header.d=amazonses.com header.i=@amazonses.com header.a=rsa-sha256 header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv header.b=PvoEs17L;
+	dkim-atps=neutral
+Received: from a27-10.smtp-out.us-west-2.amazonses.com (a27-10.smtp-out.us-west-2.amazonses.com [54.240.27.10])
+	by mail.redacted.nil (Postfix) with ESMTPS id 5EAAE13B030
+	for <recipient@redacted.nil>; Thu,  3 Dec 2020 18:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=sy4yaueax2wxeqvbwtfafsfpuli4zspd; d=pypi.org; t=1607018550;
+	h=Subject:From:To:MIME-Version:Content-Type:Message-ID:Date;
+	bh=3tSjr/p8U98Y6VPb/lXnFWQX4OvAj20xcNdTK2v2o6k=;
+	b=RopfsgK8yiLka57yfeNmWJKg4i6ToHif2+7H8gRketwz+0QfsjU/mRcGJUkVOGVQ
+	v2wlDwboRC2G39QbX53YYyo4yQBPXokRImT8xRkDpHomqd0OUS0odtE8THHack8EEaE
+	3gfX+t80fHbILQiNtAyjXg60IlivJemzFEs93tks=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1607018550;
+	h=Subject:From:To:MIME-Version:Content-Type:Message-ID:Date:Feedback-ID;
+	bh=3tSjr/p8U98Y6VPb/lXnFWQX4OvAj20xcNdTK2v2o6k=;
+	b=PvoEs17LVcXnf9YScJ9IPD4pVhs1mzl4YYGv2fCT0oG7xdKodFSlZJ7Z0haY1APE
+	T86HnVq7bzjsCWL9TQJWAi+LrHBlIRLRL22k6YNDuwYJOa9dkKFxbiaqwEIe+bzxuEX
+	PpdWM/1xxHuQ9a11INQRSH8it0sZXwSTBTqRyaAU=
+Subject: [PyPI] Collaborator added notification
+From: PyPI <noreply@pypi.org>
+To: jwodder <recipient@redacted.nil>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============0747615486913937503=="
+Message-ID: <0101017629c51320-4f67ae0a-8056-4cd7-b526-e47da4bbe7b7-000000@us-west-2.amazonses.com>
+Date: Thu, 3 Dec 2020 18:02:30 +0000
+X-SES-Outgoing: 2020.12.03-54.240.27.10
+Feedback-ID: 1.us-west-2.ZRFc7KXPaRh5E01FOWpg1s1VfcS7E0CO2O03ZZnJB3U=:AmazonSES
+Status: RO
+Content-Length: 1431
+Lines: 65
+
+--===============0747615486913937503==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+
+A new collaborator has been added to a project you own on PyPI:
+
+  Username: REDACTED
+  Role: Owner
+  Collaborator for: REDACTED
+  Added by: jwodder
+
+If this was a mistake, you can email admin@pypi.org to communicate with the PyPI administrators.
+
+
+--
+
+You are receiving this because you are an owner of this project.
+
+--===============0747615486913937503==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=3D"utf-8">
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width">
+
+    </head>
+  <body>
+   =20
+<p>
+  A new collaborator has been added to a project you own on PyPI:
+
+  </p>
+<ul style=3D"list-style-type:none">
+    <li>
+<strong>Username</strong>: REDACTED</li>
+    <li>
+<strong>Role</strong>: Owner</li>
+    <li>
+<strong>Collaborator for</strong>: REDACTED</li>
+    <li>
+<strong>Added by</strong>: jwodder</li>
+  </ul>
+
+
+<p>If this was a mistake, you can email <a href=3D"mailto:admin@pypi.org">adm=
+in@pypi.org</a> to communicate with the PyPI administrators.</p>
+
+
+   =20
+    <p style=3D"color:#666; font-size:small">
+        =E2=80=94<br>
+       =20
+You are receiving this because you are an owner of this project.
+
+    </p>
+   =20
+  </body>
+</html>
+
+--===============0747615486913937503==--
+

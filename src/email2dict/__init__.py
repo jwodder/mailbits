@@ -17,14 +17,17 @@ __author_email__ = 'email2dict@varonathe.org'
 __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/email2dict'
 
-from   datetime      import datetime
+from   datetime        import datetime
 import email
-from   email         import headerregistry as hr
-from   email         import policy
-from   email.message import EmailMessage, Message
+from   email           import headerregistry as hr
+from   email           import policy
+from   email.generator import BytesGenerator
+from   email.message   import EmailMessage, Message
 import inspect
+from   io              import BytesIO
+from   mailbox         import MMDFMessage, mboxMessage
 import sys
-from   typing        import Any, Callable, Dict, List, Optional, \
+from   typing          import Any, Callable, Dict, List, Optional, \
                                 TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
@@ -34,6 +37,7 @@ if TYPE_CHECKING:
         from typing_extensions import TypedDict
 
     class MessageDict(TypedDict):
+        unixfrom: Optional[str]
         headers: Dict[str, Any]
         preamble: Optional[str]
         content: Any
@@ -157,6 +161,7 @@ def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
     if not isinstance(msg, EmailMessage):
         msg = message2email(msg)
     data: MessageDict = {
+        "unixfrom": msg.get_unixfrom(),
         "headers": {},
         "preamble": None,
         "content": None,
@@ -190,8 +195,20 @@ def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
     return data
 
 def message2email(msg: Message) -> EmailMessage:
-    emsg = email.message_from_bytes(bytes(msg), policy=policy.default)
+    # Message.as_bytes() refolds long header lines (which can result in changes
+    # in whitespace after reparsing) and doesn't give a way to change this, so
+    # we need to use a BytesGenerator manually.
+    fp = BytesIO()
+    g = BytesGenerator(fp, mangle_from_=False, maxheaderlen=0)
+    g.flatten(msg, unixfrom=msg.get_unixfrom() is not None)
+    fp.seek(0)
+    emsg = email.message_from_binary_file(fp, policy=policy.default)
     assert isinstance(emsg, EmailMessage)
+    # MMDFMessage and mboxMessage make their "From " lines available though a
+    # different method than normal Messages, so we have to copy it over
+    # manually.
+    if isinstance(msg, (MMDFMessage, mboxMessage)):
+        emsg.set_unixfrom("From " + msg.get_from())
     return emsg
 
 def takes_argument(callable_obj: Callable, argname: str) -> bool:
