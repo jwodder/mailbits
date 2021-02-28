@@ -38,7 +38,9 @@ def test_simple():
             ],
             "content-type": "text/plain",
         },
+        "preamble": None,
         "content": BODY,
+        "epilogue": None,
     }
 
 def test_text_html_attachment():
@@ -101,23 +103,29 @@ def test_text_html_attachment():
             ],
             "content-type": "multipart/alternative",
         },
+        "preamble": None,
         "content": [
             {
                 "headers": {
                     "content-type": "text/plain"
                 },
+                "preamble": None,
                 "content": TEXT,
+                "epilogue": None,
             },
             {
                 "headers": {
                     "content-type": "multipart/related",
                 },
+                "preamble": None,
                 "content": [
                     {
                         "headers": {
                             "content-type": "text/html",
                         },
+                        "preamble": None,
                         "content": HTML,
+                        "epilogue": None,
                     },
                     {
                         "headers": {
@@ -127,9 +135,13 @@ def test_text_html_attachment():
                             },
                             "content-id": asparagus_cid,
                         },
+                        "preamble": None,
                         "content": IMG,
+                        "epilogue": None,
                     },
                 ],
+                "epilogue": None,
             },
-        ]
+        ],
+        "epilogue": None,
     }

@@ -104,10 +104,12 @@ def email2dict(msg: Message) -> dict:
         else:
             v = unlist(list(map(str, values)))
         data["headers"][header] = v
+    data["preamble"] = msg.preamble
     if msg.is_multipart():
         data["content"] = list(map(email2dict, msg.iter_parts()))
     else:
         data["content"] = msg.get_content()
+    data["epilogue"] = msg.epilogue
     return data
 
 def message2email(msg: Message) -> EmailMessage:
