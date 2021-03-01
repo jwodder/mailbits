@@ -1,7 +1,7 @@
-.. image:: http://www.repostatus.org/badges/latest/wip.svg
-    :target: http://www.repostatus.org/#wip
-    :alt: Project Status: WIP — Initial development is in progress, but there
-          has not yet been a stable, usable release suitable for the public.
+.. image:: http://www.repostatus.org/badges/latest/active.svg
+    :target: http://www.repostatus.org/#active
+    :alt: Project Status: Active — The project has reached a stable, usable
+          state and is being actively developed.
 
 .. image:: https://github.com/jwodder/email2dict/workflows/Test/badge.svg?branch=master
     :target: https://github.com/jwodder/email2dict/actions?workflow=Test
@@ -10,11 +10,15 @@
 .. image:: https://codecov.io/gh/jwodder/email2dict/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/email2dict
 
+.. image:: https://img.shields.io/pypi/pyversions/email2dict.svg
+    :target: https://pypi.org/project/email2dict/
+
 .. image:: https://img.shields.io/github/license/jwodder/email2dict.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
 `GitHub <https://github.com/jwodder/email2dict>`_
+| `PyPI <https://pypi.org/project/email2dict/>`_
 | `Issues <https://github.com/jwodder/email2dict/issues>`_
 
 ``email2dict`` converts Python ``Message`` & ``EmailMessage`` instances into
@@ -30,7 +34,7 @@ Installation
 ``email2dict`` requires Python 3.6 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install it::
 
-    python3 -m pip install git+https://github.com/jwodder/email2dict
+    python3 -m pip install email2dict
 
 
 Example
