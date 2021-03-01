@@ -9,6 +9,12 @@ data = {
                 "address": "mary@example.net",
             },
         ],
+        "resent-sender": [
+            {
+                "display_name": "Michael Jones",
+                "address": "mjones@machine.example",
+            },
+        ],
         "resent-to": [
             {
                 "display_name": "Jane Brown",
@@ -38,7 +44,7 @@ data = {
         "message-id": "<1234@local.machine.example>",
     },
     "preamble": None,
-    "content": "This is a message just to say hello.\nSo, \"Hello\".\n\n-- \nTaken from RFC 5322, section A.3.\n",
+    "content": "This is a message just to say hello.\nSo, \"Hello\".\n\n-- \nAdapted from RFC 5322, section A.3.\n",
     "epilogue": None,
 }
 

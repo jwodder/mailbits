@@ -1,4 +1,5 @@
 Resent-From: Mary Smith <mary@example.net>
+Resent-Sender: Michael Jones <mjones@machine.example>
 Resent-To: Jane Brown <j-brown@other.example>
 Resent-Date: Mon, 24 Nov 1997 14:22:01 -0800
 Resent-Message-ID: <78910@example.net>
@@ -12,4 +13,4 @@ This is a message just to say hello.
 So, "Hello".
 
 -- 
-Taken from RFC 5322, section A.3.
+Adapted from RFC 5322, section A.3.
