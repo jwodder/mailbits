@@ -239,8 +239,10 @@ The output structure has the following fields:
 ``content``
     If the message is multipart, this is a list of message ``dict``\s,
     structured the same way as the top-level ``dict``.  If the message's
-    Content-Type is ``text/*``, this is a ``str`` giving the contents of the
-    message.  Otherwise, it is a ``bytes`` giving the contents of the message.
+    Content-Type is ``message/rfc822`` or ``message/external-body``, this is a
+    single message ``dict``.  If the message's Content-Type is ``text/*``, this
+    is a ``str`` giving the contents of the message.  Otherwise, it is a
+    ``bytes`` giving the contents of the message.
 
 ``epilogue``
     The message's epilogue__

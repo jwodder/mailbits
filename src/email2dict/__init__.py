@@ -185,7 +185,16 @@ def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
             v = processor(values, **kwargs)
         data["headers"][header] = v
     data["preamble"] = msg.preamble
-    if msg.is_multipart():
+    if msg.get_content_maintype() == "message":
+        # Some "message/*" subtypes (specifically, as of Python 3.9, rfc822 and
+        # external-body, but we should try to be future-proof) have
+        # get_content() return a Message, while others return bytes.
+        content = msg.get_content()
+        if isinstance(content, Message):
+            data["content"] = email2dict(content, include_all=include_all)
+        else:
+            data["content"] = content
+    elif msg.is_multipart():
         data["content"] = [
             email2dict(p, include_all=include_all) for p in msg.iter_parts()
         ]

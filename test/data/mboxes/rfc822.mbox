@@ -1,0 +1,60 @@
+From sender@example.nil Sat Aug 18 03:12:23 2018
+Delivered-To: recipient@redacted.nil
+Date: Sat, 18 Aug 2018 03:11:52 +0000
+From: "Steven E'Nder" <sender@example.nil>
+To: recipient@redacted.nil
+Subject: Fwd: Your confirmed booking
+Message-ID: <20180818031152.GA7082@example.nil>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+
+
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Here's that e-mail you wanted:
+
+
+--cWoXeonUoKmBZSoM
+Content-Type: message/rfc822
+Content-Disposition: inline
+
+Delivered-To: sender@example.nil
+Date: Sat, 18 Aug 2018 03:08:20 +0000
+Sender: hi.booker.com@company.out.foobar.qq
+Message-Id: <abcdefghijklmnopqrstuv@smtpd.sendgrid.net>
+To: sender@example.nil
+From: Booking Company <hi.booker.com@company.out.foobar.qq>
+Subject: Your confirmed booking
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+We have great news! Your booking has been finalized and confirmed. Enjoy yo=
+ur trip, and please let us know if we can be helpful in any way.=20
+Confirmation ABC123=20
+Flight from Newark to San Francisco EWR =E2=86=92 SFO=20
+Airline PanAm=20
+Flight Number(s) PA 1234=20
+Departure August 19, 2018 at 3:50 PM=20
+Arrival August 19, 2018 at 7:10 PM=20
+Layovers Nonstop=20
+Class of Service Economy=20
+Flight from San Francisco to Newark SFO =E2=86=92 EWR=20
+Airline PanAm=20
+Flight Number(s) PA 4321=20
+Departure August 20, 2018 at 9:30 PM=20
+Arrival August 21, 2018 at 6:00 AM=20
+Layovers Nonstop=20
+Class of Service Economy=20
+Travelers Steven E'Nder=20
+
+This email is a booking confirmation, not a receipt. If you used your own p=
+ayment method for this purchase, you will receive a separate email receipt =
+after you are charged.=20
+
+--cWoXeonUoKmBZSoM--
+
