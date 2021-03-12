@@ -1,7 +1,8 @@
 import email
+from email import headerregistry as hr
 from email import policy
 from email.generator import BytesGenerator
-from email.headerregistry import Address, AddressHeader, Group
+from email.headerregistry import Address, Group
 from email.message import EmailMessage, Message
 from io import BytesIO
 from mailbox import MMDFMessage, mboxMessage
@@ -20,11 +21,8 @@ class ContentType:
     @classmethod
     def parse(cls, s: str) -> "ContentType":
         """ Parse a :mailheader:`Content-Type` string """
-        msg = EmailMessage()
-        msg["Content-Type"] = s
-        if msg["Content-Type"].defects:
-            raise ValueError(s)
-        ct = msg["Content-Type"]
+        ct = parse_header("Content-Type", s)
+        assert isinstance(ct, hr.ContentTypeHeader)
         return cls(ct.maintype, ct.subtype, dict(ct.params))
 
     @property
@@ -65,23 +63,16 @@ def format_addresses(addresses: Iterable[AddressOrGroup]) -> str:
 
 
 def parse_address(s: str) -> Address:
-    msg = EmailMessage()
-    msg["To"] = s
-    if msg["To"].defects:
-        raise ValueError(s)
-    addresses: List[Address] = [
-        address for group in msg["To"].groups for address in group.addresses
-    ]
-    if len(addresses) != 1:
-        raise ValueError(s)
-    return addresses[0]
+    h = parse_header("Sender", s)
+    assert isinstance(h, hr.SingleAddressHeader)
+    return h.address
 
 
 def recipient_addresses(msg: EmailMessage) -> List[str]:
     recipients = set()
     for key in ["To", "CC", "BCC"]:
         for header in msg.get_all(key, []):
-            assert isinstance(header, AddressHeader)
+            assert isinstance(header, hr.AddressHeader)
             for addr in header.addresses:
                 recipients.add(addr.addr_spec)
     return sorted(recipients)
@@ -104,3 +95,15 @@ def message2email(msg: Message) -> EmailMessage:
     if isinstance(msg, (MMDFMessage, mboxMessage)):
         emsg.set_unixfrom("From " + msg.get_from())
     return emsg
+
+
+def parse_header(name: str, value: str) -> Any:
+    # mypy fails on the next line because of
+    # <https://github.com/python/mypy/issues/10131>
+    h = policy.default.header_factory(name, value)  # type: ignore
+    assert isinstance(h, hr.BaseHeader)
+    if h.defects:
+        # You'd think the strict policy would raise an error on defective
+        # headers, but no...
+        raise ValueError(value)
+    return h

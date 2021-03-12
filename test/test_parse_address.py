@@ -38,6 +38,5 @@ def test_parse_address(s: str, addr: Address) -> None:
     ],
 )
 def test_parse_address_error(s: str) -> None:
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(ValueError):
         parse_address(s)
-    assert str(excinfo.value) == s
