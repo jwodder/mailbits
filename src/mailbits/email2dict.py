@@ -1,11 +1,10 @@
-from   datetime        import datetime
-from   email           import headerregistry as hr
-from   email.message   import EmailMessage, Message
+from datetime import datetime
+from email import headerregistry as hr
+from email.message import EmailMessage, Message
 import inspect
 import sys
-from   typing          import Any, Callable, Dict, List, Optional, \
-                                TYPE_CHECKING, cast
-from   .misc           import message2email
+from typing import Any, Callable, Dict, List, Optional, TYPE_CHECKING, cast
+from .misc import message2email
 
 if TYPE_CHECKING:
     if sys.version_info[:2] >= (3, 8):
@@ -25,11 +24,13 @@ def process_unique_string_header(ush: List[Any]) -> str:
     assert len(ush) == 1
     return str(ush[0])
 
+
 def process_address(addr: hr.Address) -> Dict[str, str]:
     return {
         "display_name": addr.display_name,
         "address": addr.addr_spec,
     }
+
 
 def process_addr_headers(ahs: List[Any]) -> List[dict]:
     data: List[dict] = []
@@ -46,21 +47,26 @@ def process_addr_headers(ahs: List[Any]) -> List[dict]:
             addrlist.extend(map(process_address, g.addresses))
     return data
 
+
 SKIPPED_CT_PARAMS = {
     "charset",
     "boundary",
 }
 
-def process_content_type_headers(cths: List[Any], include_all: bool = False) \
-        -> Dict[str, Any]:
+
+def process_content_type_headers(
+    cths: List[Any], include_all: bool = False
+) -> Dict[str, Any]:
     assert len(cths) == 1
     return {
         "content_type": cths[0].content_type,
         "params": {
-            k: v for k,v in cths[0].params.items()
-                 if include_all or k not in SKIPPED_CT_PARAMS
+            k: v
+            for k, v in cths[0].params.items()
+            if include_all or k not in SKIPPED_CT_PARAMS
         },
     }
+
 
 def process_date_headers(dh: List[Any]) -> List[datetime]:
     data = []
@@ -69,15 +75,18 @@ def process_date_headers(dh: List[Any]) -> List[datetime]:
         data.append(h.datetime)
     return data
 
+
 def process_unique_date_header(dh: List[Any]) -> datetime:
     assert len(dh) == 1
     assert isinstance(dh[0], hr.UniqueDateHeader)
     return dh[0].datetime
 
+
 def process_unique_single_addr_header(ah: List[Any]) -> Dict[str, str]:
     assert len(ah) == 1
     assert isinstance(ah[0], hr.UniqueSingleAddressHeader)
     return process_address(ah[0].address)
+
 
 def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
     data = []
@@ -85,6 +94,7 @@ def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
         assert isinstance(h, hr.SingleAddressHeader)
         data.append(process_address(h.address))
     return data
+
 
 def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
     assert len(cdh) == 1
@@ -94,15 +104,18 @@ def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
         "params": dict(cdh[0].params),
     }
 
+
 def process_cte_header(cteh: List[Any]) -> str:
     assert len(cteh) == 1
     assert isinstance(cteh[0], hr.ContentTransferEncodingHeader)
     return cteh[0].cte  # TODO: When is this different from `str(cteh[0])`?
 
+
 def process_mime_version_header(mvh: List[Any]) -> Optional[str]:
     assert len(mvh) == 1
     assert isinstance(mvh[0], hr.MIMEVersionHeader)
     return mvh[0].version
+
 
 HEADER_PROCESSORS: Dict[str, Callable] = {
     "subject": process_unique_string_header,
@@ -131,6 +144,7 @@ SKIPPED_HEADERS = {
     "content-transfer-encoding",
     "mime-version",
 }
+
 
 def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
     if not isinstance(msg, EmailMessage):
@@ -177,6 +191,7 @@ def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
         data["content"] = msg.get_content()
     data["epilogue"] = msg.epilogue
     return data
+
 
 def takes_argument(callable_obj: Callable, argname: str) -> bool:
     sig = inspect.signature(callable_obj)
