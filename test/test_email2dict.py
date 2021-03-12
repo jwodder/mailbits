@@ -9,7 +9,7 @@ import mailbox
 from operator import attrgetter
 from pathlib import Path
 import pytest
-from email2dict import email2dict
+from mailbits import email2dict
 
 DATA_DIR = Path(__file__).with_name("data")
 EMAIL_DIR = DATA_DIR / "emails"

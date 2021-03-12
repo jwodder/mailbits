@@ -3,39 +3,39 @@
     :alt: Project Status: Active — The project has reached a stable, usable
           state and is being actively developed.
 
-.. image:: https://github.com/jwodder/email2dict/workflows/Test/badge.svg?branch=master
-    :target: https://github.com/jwodder/email2dict/actions?workflow=Test
+.. image:: https://github.com/jwodder/mailbits/workflows/Test/badge.svg?branch=master
+    :target: https://github.com/jwodder/mailbits/actions?workflow=Test
     :alt: CI Status
 
-.. image:: https://codecov.io/gh/jwodder/email2dict/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/jwodder/email2dict
+.. image:: https://codecov.io/gh/jwodder/mailbits/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/jwodder/mailbits
 
-.. image:: https://img.shields.io/pypi/pyversions/email2dict.svg
-    :target: https://pypi.org/project/email2dict/
+.. image:: https://img.shields.io/pypi/pyversions/mailbits.svg
+    :target: https://pypi.org/project/mailbits/
 
-.. image:: https://img.shields.io/github/license/jwodder/email2dict.svg
+.. image:: https://img.shields.io/github/license/jwodder/mailbits.svg
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
-`GitHub <https://github.com/jwodder/email2dict>`_
-| `PyPI <https://pypi.org/project/email2dict/>`_
-| `Issues <https://github.com/jwodder/email2dict/issues>`_
-| `Changelog <https://github.com/jwodder/email2dict/blob/master/CHANGELOG.md>`_
+`GitHub <https://github.com/jwodder/mailbits>`_
+| `PyPI <https://pypi.org/project/mailbits/>`_
+| `Issues <https://github.com/jwodder/mailbits/issues>`_
+| `Changelog <https://github.com/jwodder/mailbits/blob/master/CHANGELOG.md>`_
 
-``email2dict`` converts Python ``Message`` & ``EmailMessage`` instances into
+``mailbits`` converts Python ``Message`` & ``EmailMessage`` instances into
 structured ``dict``\s.  Need to examine a ``Message`` but find the builtin
 Python API too fiddly?  Need to check that a ``Message`` has the content &
 structure you expect?  Need to compare two ``Message`` instances for equality?
-Need to pretty-print the structure of a ``Message``?  Then ``email2dict`` has
+Need to pretty-print the structure of a ``Message``?  Then ``mailbits`` has
 your back.
 
 
 Installation
 ============
-``email2dict`` requires Python 3.6 or higher.  Just use `pip
+``mailbits`` requires Python 3.6 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install it::
 
-    python3 -m pip install email2dict
+    python3 -m pip install mailbits
 
 
 Example
@@ -162,8 +162,7 @@ __ https://docs.python.org/3/library/email.examples.html
 API
 ===
 
-The ``email2dict`` module provides a single function, also named
-``email2dict``:
+The ``mailbits`` module provides a single function, named ``email2dict``:
 
 .. code:: python
 

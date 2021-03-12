@@ -1,5 +1,5 @@
 import pytest
-from   email2dict import takes_argument
+from   mailbits import takes_argument
 
 def simple(foo):
     return foo
