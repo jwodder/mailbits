@@ -1,20 +1,21 @@
+from typing import Any, Callable, Dict
 import pytest
 from mailbits.email2dict import takes_argument
 
 
-def simple(foo):
+def simple(foo: Any) -> Any:
     return foo
 
 
-def defaulting(foo=None):
+def defaulting(foo: Any = None) -> Any:
     return foo
 
 
-def kwarged(**kwargs):
+def kwarged(**kwargs: Any) -> Dict[str, Any]:
     return kwargs
 
 
-def arged(*foo):
+def arged(*foo: Any) -> tuple:
     return foo
 
 
@@ -30,5 +31,5 @@ def arged(*foo):
         (arged, "foo", False),
     ],
 )
-def test_takes_argument(func, arg, result):
+def test_takes_argument(func: Callable, arg: str, result: bool) -> None:
     assert takes_argument(func, arg) is result
