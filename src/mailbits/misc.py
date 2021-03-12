@@ -49,7 +49,10 @@ class ContentType:
             raise ValueError(ct)
         for k, v in self.params.items():
             msg.set_param(k, v)
-        return bytes(msg["Content-Type"])
+        b = policy.default.fold_binary("Content-Type", msg["Content-Type"])
+        prefix = b"Content-Type: "
+        assert b.startswith(prefix)
+        return b[len(prefix) :].rstrip(b"\n")
 
 
 def format_addresses(addresses: Iterable[AddressOrGroup]) -> str:
@@ -89,6 +92,7 @@ def message2email(msg: Message) -> EmailMessage:
     # in whitespace after reparsing) and doesn't give a way to change this, so
     # we need to use a BytesGenerator manually.
     fp = BytesIO()
+    # TODO: Instead of maxheaderlen, use a policy with refold_source=None?
     g = BytesGenerator(fp, mangle_from_=False, maxheaderlen=0)
     g.flatten(msg, unixfrom=msg.get_unixfrom() is not None)
     fp.seek(0)

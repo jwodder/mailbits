@@ -72,6 +72,33 @@ def test_assemble_content_type(
 
 
 @pytest.mark.parametrize(
+    "maintype,subtype,params,ct",
+    [
+        ("text", "plain", {}, b"text/plain"),
+        ("TEXT", "PLAIN", {}, b"TEXT/PLAIN"),
+        ("text", "plain", {"charset": "utf-8"}, b'text/plain; charset="utf-8"'),
+        (
+            "text",
+            "plain",
+            {"name": "résumé.txt"},
+            b"text/plain; name*=utf-8''r%C3%A9sum%C3%A9.txt",
+        ),
+        ("text", "plain", {"name": 'foo"bar'}, b'text/plain; name="foo\\"bar"'),
+        (
+            "text",
+            "markdown",
+            {"charset": "utf-8", "variant": "GFM"},
+            b'text/markdown; charset="utf-8"; variant="GFM"',
+        ),
+    ],
+)
+def test_assemble_content_type_encoded(
+    maintype: str, subtype: str, params: Dict[str, str], ct: bytes
+) -> None:
+    assert bytes(ContentType(maintype, subtype, params)) == ct
+
+
+@pytest.mark.parametrize(
     "maintype,subtype",
     [
         ("text/plain", "plain"),
@@ -82,4 +109,7 @@ def test_assemble_content_type(
 def test_assemble_content_type_error(maintype: str, subtype: str) -> None:
     with pytest.raises(ValueError) as excinfo:
         str(ContentType(maintype, subtype))
+    assert str(excinfo.value) == f"{maintype}/{subtype}"
+    with pytest.raises(ValueError) as excinfo:
+        bytes(ContentType(maintype, subtype))
     assert str(excinfo.value) == f"{maintype}/{subtype}"
