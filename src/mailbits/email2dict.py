@@ -3,21 +3,21 @@ from email import headerregistry as hr
 from email.message import EmailMessage, Message
 import inspect
 import sys
-from typing import Any, Callable, Dict, List, Optional, TYPE_CHECKING, cast
+from typing import Any, Callable, Dict, List, Optional, cast
 from .misc import message2email
 
-if TYPE_CHECKING:
-    if sys.version_info[:2] >= (3, 8):
-        from typing import TypedDict
-    else:
-        from typing_extensions import TypedDict
+if sys.version_info[:2] >= (3, 8):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
 
-    class MessageDict(TypedDict):
-        unixfrom: Optional[str]
-        headers: Dict[str, Any]
-        preamble: Optional[str]
-        content: Any
-        epilogue: Optional[str]
+
+class MessageDict(TypedDict):
+    unixfrom: Optional[str]
+    headers: Dict[str, Any]
+    preamble: Optional[str]
+    content: Any
+    epilogue: Optional[str]
 
 
 def process_unique_string_header(ush: List[Any]) -> str:

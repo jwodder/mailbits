@@ -17,7 +17,7 @@ __author_email__ = "mailbits@varonathe.org"
 __license__ = "MIT"
 __url__ = "https://github.com/jwodder/mailbits"
 
-from .email2dict import email2dict
+from .email2dict import MessageDict, email2dict
 from .misc import (
     ContentType,
     format_addresses,
@@ -28,6 +28,7 @@ from .misc import (
 
 __all__ = [
     "ContentType",
+    "MessageDict",
     "email2dict",
     "format_addresses",
     "message2email",

@@ -10,8 +10,7 @@ from operator import attrgetter
 from pathlib import Path
 from typing import Any
 import pytest
-from mailbits import email2dict
-from mailbits.email2dict import MessageDict
+from mailbits import MessageDict, email2dict
 
 DATA_DIR = Path(__file__).with_name("data")
 EMAIL_DIR = DATA_DIR / "emails"
