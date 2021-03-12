@@ -20,6 +20,7 @@
 `GitHub <https://github.com/jwodder/email2dict>`_
 | `PyPI <https://pypi.org/project/email2dict/>`_
 | `Issues <https://github.com/jwodder/email2dict/issues>`_
+| `Changelog <https://github.com/jwodder/email2dict/blob/master/CHANGELOG.md>`_
 
 ``email2dict`` converts Python ``Message`` & ``EmailMessage`` instances into
 structured ``dict``\s.  Need to examine a ``Message`` but find the builtin
