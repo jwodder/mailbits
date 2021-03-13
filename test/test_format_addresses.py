@@ -44,6 +44,19 @@ from mailbits import format_addresses
             "undisclosed recipients:;, luser@example.nil,"
             " friends: you@there.net, Thaddeus Hem <them@hither.yon>;",
         ),
+        (
+            [
+                Address(
+                    "John Jacob Jingleheimer Smith",
+                    addr_spec="john.jacob.jingleheimer.smith@his-name-is-my-name-too.com",
+                ),
+                Address(
+                    "Jebediah Obadiah Zachariah Jedediah Springfield",
+                    addr_spec="jebediah.obadiah.zachariah.jedediah.springfield@simpsons.state",
+                ),
+            ],
+            "John Jacob Jingleheimer Smith <john.jacob.jingleheimer.smith@his-name-is-my-name-too.com>, Jebediah Obadiah Zachariah Jedediah Springfield <jebediah.obadiah.zachariah.jedediah.springfield@simpsons.state>",
+        ),
     ],
 )
 def test_format_addresses(
