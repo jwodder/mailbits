@@ -86,9 +86,15 @@ def test_format_addresses(
             [Address("Fabian O. Oh", addr_spec="foo@example.com")],
             '"Fabian O. Oh" <foo@example.com>',
         ),
+        # The encoding of the domain name seems to violate the RFCs, and Python
+        # can't even parse the results back:
+        # (
+        #     [Address("Zoë Façade", addr_spec="zoe.facade@naïveté.fr")],
+        #     "=?utf-8?q?Zo=C3=AB_Fa=C3=A7ade?= <zoe.facade@=?utf-8?b?bmHDr3ZldMOp?=.fr>",
+        # ),
         (
-            [Address("Zoë Façade", addr_spec="zoe.facade@naïveté.fr")],
-            "=?utf-8?q?Zo=C3=AB_Fa=C3=A7ade?= <zoe.facade@=?utf-8?b?bmHDr3ZldMOp?=.fr>",
+            [Address("Zoë Façade", addr_spec="zoe.facade@naivete.fr")],
+            "=?utf-8?q?Zo=C3=AB_Fa=C3=A7ade?= <zoe.facade@naivete.fr>",
         ),
         (
             [

@@ -79,6 +79,21 @@ def parse_address(s: str) -> Address:
     return h.address
 
 
+def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Group]]:
+    if isinstance(s, str):
+        h = parse_header("To", s)
+        assert isinstance(h, hr.AddressHeader)
+    else:
+        h = s
+    parsed: List[Union[Address, Group]] = []
+    for g in h.groups:
+        if g.display_name is not None:
+            parsed.append(g)
+        else:
+            parsed.extend(g.addresses)
+    return parsed
+
+
 def recipient_addresses(msg: EmailMessage) -> List[str]:
     recipients = set()
     for key in ["To", "CC", "BCC"]:

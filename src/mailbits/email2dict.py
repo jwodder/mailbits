@@ -3,8 +3,8 @@ from email import headerregistry as hr
 from email.message import EmailMessage, Message
 import inspect
 import sys
-from typing import Any, Callable, Dict, List, Optional, cast
-from .misc import message2email
+from typing import Any, Callable, Dict, List, Optional
+from .misc import message2email, parse_addresses
 
 if sys.version_info[:2] >= (3, 8):
     from typing import TypedDict
@@ -36,15 +36,16 @@ def process_addr_headers(ahs: List[Any]) -> List[dict]:
     data: List[dict] = []
     for h in ahs:
         assert isinstance(h, hr.AddressHeader)
-        for g in h.groups:
-            addrlist: List[dict]
-            if g.display_name is not None:
-                group = {"group": g.display_name, "addresses": []}
-                data.append(group)
-                addrlist = cast(List[dict], group["addresses"])
+        for ag in parse_addresses(h):
+            if isinstance(ag, hr.Group):
+                data.append(
+                    {
+                        "group": ag.display_name,
+                        "addresses": list(map(process_address, ag.addresses)),
+                    }
+                )
             else:
-                addrlist = data
-            addrlist.extend(map(process_address, g.addresses))
+                data.append(process_address(ag))
     return data
 
 

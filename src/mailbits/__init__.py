@@ -23,6 +23,7 @@ from .misc import (
     format_addresses,
     message2email,
     parse_address,
+    parse_addresses,
     recipient_addresses,
 )
 
@@ -33,5 +34,6 @@ __all__ = [
     "format_addresses",
     "message2email",
     "parse_address",
+    "parse_addresses",
     "recipient_addresses",
 ]
