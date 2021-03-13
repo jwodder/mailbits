@@ -11,6 +11,8 @@ import attr
 
 AddressOrGroup = Union[str, Address, Group]
 
+ENCODED_POLICY = policy.default.clone(utf8=False, max_line_length=0)
+
 
 @attr.s(auto_attribs=True)
 class ContentType:
@@ -53,13 +55,22 @@ class ContentType:
         return b[len(prefix) :].rstrip(b"\n")
 
 
-def format_addresses(addresses: Iterable[AddressOrGroup]) -> str:
+def format_addresses(addresses: Iterable[AddressOrGroup], encode: bool = False) -> str:
     """
     Format a sequence of addresses for use in a custom address header string
     """
     msg = EmailMessage()
     msg["To"] = [Address(addr_spec=a) if isinstance(a, str) else a for a in addresses]
-    return str(msg["To"])
+    if encode:
+        folded = msg["To"].fold(policy=ENCODED_POLICY)
+        assert isinstance(folded, str)
+        if folded == "To:\n":
+            return ""
+        prefix = "To: "
+        assert folded.startswith(prefix)
+        return folded[len(prefix) :].rstrip("\n")
+    else:
+        return str(msg["To"])
 
 
 def parse_address(s: str) -> Address:
