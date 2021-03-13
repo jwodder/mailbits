@@ -1,6 +1,14 @@
 v0.2.0 (in development)
 -----------------------
-- Rename project to "mailbits"
+- Renamed project to "mailbits"
+- Added a `ContentType` class
+- Exposed the `message2email()` function
+- Exposed the `MessageDict` type
+- Added the following functions:
+    - `format_addresses()`
+    - `parse_address()`
+    - `parse_addresses()`
+    - `recipient_addresses()`
 
 v0.1.0 (2021-02-28)
 -------------------
