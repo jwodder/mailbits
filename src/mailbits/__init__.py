@@ -1,12 +1,13 @@
 """
 Assorted e-mail utility functions
 
-``mailbits`` converts Python ``Message`` & ``EmailMessage`` instances into
-structured ``dict``\\s.  Need to examine a ``Message`` but find the builtin
-Python API too fiddly?  Need to check that a ``Message`` has the content &
-structure you expect?  Need to compare two ``Message`` instances for equality?
-Need to pretty-print the structure of a ``Message``?  Then ``mailbits`` has
-your back.
+``mailbits`` provides a small assortment of functions for working with the
+Python standard library's ``Message``/``EmailMessage``, ``Address``, and
+``Group`` types, as well as a couple other features.  It can parse & reassemble
+Content-Type strings, convert instances of the old ``Message`` class to the new
+``EmailMessage``, convert ``Message`` & ``EmailMessage`` instances into
+structured ``dict``\\s, parse addresses, format address lists, and extract
+recipients' raw e-mail addresses from an ``EmailMessage``.
 
 Visit <https://github.com/jwodder/mailbits> for more information.
 """

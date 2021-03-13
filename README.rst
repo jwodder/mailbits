@@ -22,12 +22,13 @@
 | `Issues <https://github.com/jwodder/mailbits/issues>`_
 | `Changelog <https://github.com/jwodder/mailbits/blob/master/CHANGELOG.md>`_
 
-``mailbits`` converts Python ``Message`` & ``EmailMessage`` instances into
-structured ``dict``\s.  Need to examine a ``Message`` but find the builtin
-Python API too fiddly?  Need to check that a ``Message`` has the content &
-structure you expect?  Need to compare two ``Message`` instances for equality?
-Need to pretty-print the structure of a ``Message``?  Then ``mailbits`` has
-your back.
+``mailbits`` provides a small assortment of functions for working with the
+Python standard library's ``Message``/``EmailMessage``, ``Address``, and
+``Group`` types, as well as a couple other features.  It can parse & reassemble
+Content-Type strings, convert instances of the old ``Message`` class to the new
+``EmailMessage``, convert ``Message`` & ``EmailMessage`` instances into
+structured ``dict``\s, parse addresses, format address lists, and extract
+recipients' raw e-mail addresses from an ``EmailMessage``.
 
 
 Installation
@@ -38,13 +39,140 @@ Installation
     python3 -m pip install mailbits
 
 
-Example
-=======
+API
+===
 
-The ``email`` `examples page`__ in the Python docs includes an example of
-constructing an HTML e-mail with an alternative plain text version (It's the
-one with the subject "Ayons asperges pour le déjeuner").  Passing the resulting
-``EmailMessage`` object to the ``email2dict()`` function produces the following
+``ContentType``
+---------------
+
+The ``ContentType`` class provides a representation of a parsed Content-Type
+header value.  Parse Content-Type strings with the ``parse()`` classmethod,
+inspect the parts via the ``content_type``, ``maintype``, ``subtype``, and
+``params`` attributes (the last three of which can be mutated), convert back to
+a string with ``str()``, and convert to ASCII bytes using encoded words for
+non-ASCII with ``bytes()``.
+
+>>> from mailbits import ContentType
+>>> ct = ContentType.parse("text/plain; charset=utf-8; name*=utf-8''r%C3%A9sum%C3%A9.txt")
+>>> ct
+ContentType(maintype='text', subtype='plain', params={'charset': 'utf-8', 'name': 'résumé.txt'})
+>>> ct.content_type
+'text/plain'
+>>> str(ct)
+'text/plain; charset="utf-8"; name="résumé.txt"'
+>>> bytes(ct)
+b'text/plain; charset="utf-8"; name*=utf-8\'\'r%C3%A9sum%C3%A9.txt'
+
+
+``email2dict()``
+----------------
+
+.. code:: python
+
+    class MessageDict(TypedDict):
+        unixfrom: Optional[str]
+        headers: Dict[str, Any]
+        preamble: Optional[str]
+        content: Any
+        epilogue: Optional[str]
+
+    mailbits.email2dict(msg: email.message.Message, include_all: bool = False) -> MessageDict
+
+Convert a ``Message`` object to a ``dict``.  All encoded text & bytes are
+decoded into their natural values.
+
+Need to examine a ``Message`` but find the builtin Python API too fiddly?  Need
+to check that a ``Message`` has the content & structure you expect?  Need to
+compare two ``Message`` instances for equality?  Need to pretty-print the
+structure of a ``Message``?  Then ``email2dict()`` has your back.
+
+By default, any information specific to how the message is encoded (Content-Type
+parameters, Content-Transfer-Encoding, etc.) is not reported, as the focus is
+on the actual content rather than the choices made in representing it.  To
+include this information anyway, set ``include_all`` to ``True``.
+
+The output structure has the following fields:
+
+``unixfrom``
+    The "From " line marking the start of the message in a mbox, if any
+
+``headers``
+    A ``dict`` mapping lowercased header field names to values.  The following
+    headers have special representations:
+
+    ``subject``
+        A single string
+
+    ``from``, ``to``, ``cc``, ``bcc``, ``resent-from``, ``resent-to``, ``resent-cc``, ``resent-bcc``, ``reply-to``
+        A list of groups and/or addresses.  Addresses are represented as
+        ``dict``\s with two string fields: ``display_name`` (an empty string if
+        not given) and ``address``.  Groups are represented as ``dict``\s with
+        a ``group`` field giving the name of the group and an ``addresses``
+        field giving a list of addresses in the group.
+
+    ``message-id``
+        A single string
+
+    ``content-type``
+        A ``dict`` containing a ``content_type`` field (a string of the form
+        ``maintype/subtype``, e.g., ``"text/plain"``) and a ``params`` field (a
+        ``dict`` of string keys & values).  The ``charset`` and ``boundary``
+        parameters are discarded unless ``include_all`` is ``True``.
+
+    ``date``
+        A ``datetime.datetime`` instance
+
+    ``orig-date``
+        A ``datetime.datetime`` instance
+
+    ``resent-date``
+        A list of ``datetime.datetime`` instances
+
+    ``sender``
+        A single address ``dict``
+
+    ``resent-sender``
+        A list of address ``dict``\s
+
+    ``content-disposition``
+        A ``dict`` containing a ``disposition`` field (value either
+        ``"inline"`` or ``"attachment"``) and a ``params`` field (a ``dict`` of
+        string keys & values)
+
+    ``content-transfer-encoding``
+        A single string.  This header is discarded unless ``include_all`` is
+        ``True``.
+
+    ``mime-version``
+        A single string.  This header is discarded unless ``include_all`` is
+        ``True``.
+
+    All other headers are represented as lists of strings.
+
+``preamble``
+    The message's preamble__
+
+    __ https://docs.python.org/3/library/email.message.html
+       #email.message.EmailMessage.preamble
+
+``content``
+    If the message is multipart, this is a list of message ``dict``\s,
+    structured the same way as the top-level ``dict``.  If the message's
+    Content-Type is ``message/rfc822`` or ``message/external-body``, this is a
+    single message ``dict``.  If the message's Content-Type is ``text/*``, this
+    is a ``str`` giving the contents of the message.  Otherwise, it is a
+    ``bytes`` giving the contents of the message.
+
+``epilogue``
+    The message's epilogue__
+
+    __ https://docs.python.org/3/library/email.message.html
+       #email.message.EmailMessage.epilogue
+
+An example: The ``email`` `examples page`__ in the Python docs includes an
+example of constructing an HTML e-mail with an alternative plain text version
+(It's the one with the subject "Ayons asperges pour le déjeuner").  Passing the
+resulting ``EmailMessage`` object to ``email2dict()`` produces the following
 output structure:
 
 __ https://docs.python.org/3/library/email.examples.html
@@ -159,97 +287,66 @@ __ https://docs.python.org/3/library/email.examples.html
     }
 
 
-API
-===
-
-The ``mailbits`` module provides a single function, named ``email2dict``:
+``format_addresses()``
+----------------------
 
 .. code:: python
 
-    email2dict(msg: email.message.Message, include_all: bool = False) -> Dict[str, Any]
+    mailbits.format_addresses(addresses: Iterable[Union[str, Address, Group]], encode: bool = False) -> str
 
-Convert a ``Message`` object to a ``dict``.  All encoded text & bytes are
-decoded into their natural values.
+Convert an iterable of e-mail address strings (of the form
+"``foo@example.com``", without angle brackets or a display name),
+``email.headerregistry.Address`` objects, and/or ``email.headerregistry.Group``
+objects into a formatted string.  If ``encode`` is ``False`` (the default),
+non-ASCII characters are left as-is.  If it is ``True``, non-ASCII display
+names are converted into :RFC:`2047` encoded words, and non-ASCII domain names
+are encoded using Punycode.
 
-By default, any information specific to how the message is encoded (Content-Type
-parameters, Content-Transfer-Encoding, etc.) is not reported, as the focus is
-on the actual content rather than the choices made in representing it.  To
-include this information anyway, set ``include_all`` to ``True``.
 
-The output structure has the following fields:
+``message2email()``
+-------------------
 
-``unixfrom``
-    The "From " line marking the start of the message in a mbox, if any
+.. code:: python
 
-``headers``
-    A ``dict`` mapping lowercased header field names to values.  The following
-    headers have special representations:
+    mailbits.message2email(msg: email.message.Message) -> email.message.EmailMessage
 
-    ``subject``
-        A single string
+Convert an instance of the old ``Message`` class (or one of its subclasses,
+like a ``mailbox`` message class) to an instance of the new ``EmailMessage``
+class with the ``default`` policy.  If ``msg`` is already an ``EmailMessage``,
+it is returned unchanged.
 
-    ``from``, ``to``, ``cc``, ``bcc``, ``resent-from``, ``resent-to``, ``resent-cc``, ``resent-bcc``, ``reply-to``
-        A list of groups and/or addresses.  Addresses are represented as
-        ``dict``\s with two string fields: ``display_name`` (an empty string if
-        not given) and ``address``.  Groups are represented as ``dict``\s with
-        a ``group`` field giving the name of the group and an ``addresses``
-        field giving a list of addresses in the group.
 
-    ``message-id``
-        A single string
+``parse_address()``
+-------------------
 
-    ``content-type``
-        A ``dict`` containing a ``content_type`` field (a string of the form
-        ``maintype/subtype``, e.g., ``"text/plain"``) and a ``params`` field (a
-        ``dict`` of string keys & values).  The ``charset`` and ``boundary``
-        parameters are discarded unless ``include_all`` is ``True``.
+.. code:: python
 
-    ``date``
-        A ``datetime.datetime`` instance
+    mailbits.parse_address(s: str) -> email.headerregistry.Address
 
-    ``orig-date``
-        A ``datetime.datetime`` instance
+Parse a single e-mail address — either a raw address like "``foo@example.com``"
+or a combined display name & address like "``Fabian Oh <foo@example.com>``"
+into an ``Address`` object.
 
-    ``resent-date``
-        A list of ``datetime.datetime`` instances
 
-    ``sender``
-        A single address ``dict``
+``parse_addresses()``
+---------------------
 
-    ``resent-sender``
-        A list of address ``dict``\s
+.. code:: python
 
-    ``content-disposition``
-        A ``dict`` containing a ``disposition`` field (value either
-        ``"inline"`` or ``"attachment"``) and a ``params`` field (a ``dict`` of
-        string keys & values)
+    mailbits.parse_addresses(s: Union[str, email.headerregistry.AddressHeader]) \
+        -> List[Union[email.headerregistry.Address, email.headerregistry.Group]]
 
-    ``content-transfer-encoding``
-        A single string.  This header is discarded unless ``include_all`` is
-        ``True``.
+Parse a formatted list of e-mail addresses or the contents of a
+``EmailMessage``'s "To", "CC", "BCC", etc. header into a list of ``Address``
+and/or ``Group`` objects.
 
-    ``mime-version``
-        A single string.  This header is discarded unless ``include_all`` is
-        ``True``.
 
-    All other headers are represented as lists of strings.
+``recipient_addresses()``
+-------------------------
 
-``preamble``
-    The message's preamble__
+.. code:: python
 
-    __ https://docs.python.org/3/library/email.message.html
-       #email.message.EmailMessage.preamble
+    mailbits.recipient_addresses(msg: email.message.EmailMessage) -> List[str]
 
-``content``
-    If the message is multipart, this is a list of message ``dict``\s,
-    structured the same way as the top-level ``dict``.  If the message's
-    Content-Type is ``message/rfc822`` or ``message/external-body``, this is a
-    single message ``dict``.  If the message's Content-Type is ``text/*``, this
-    is a ``str`` giving the contents of the message.  Otherwise, it is a
-    ``bytes`` giving the contents of the message.
-
-``epilogue``
-    The message's epilogue__
-
-    __ https://docs.python.org/3/library/email.message.html
-       #email.message.EmailMessage.epilogue
+Return a sorted list of all of the distinct e-mail addresses (not including
+display names) in an ``EmailMessage``'s combined "To", "CC", and "BCC" headers.
