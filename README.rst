@@ -336,7 +336,7 @@ into an ``Address`` object.
     mailbits.parse_addresses(s: Union[str, email.headerregistry.AddressHeader]) \
         -> List[Union[email.headerregistry.Address, email.headerregistry.Group]]
 
-Parse a formatted list of e-mail addresses or the contents of a
+Parse a formatted list of e-mail addresses or the contents of an
 ``EmailMessage``'s "To", "CC", "BCC", etc. header into a list of ``Address``
 and/or ``Group`` objects.
 

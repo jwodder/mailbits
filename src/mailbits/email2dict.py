@@ -1,6 +1,6 @@
 from datetime import datetime
 from email import headerregistry as hr
-from email.message import EmailMessage, Message
+from email.message import Message
 import inspect
 import sys
 from typing import Any, Callable, Dict, List, Optional
@@ -148,8 +148,23 @@ SKIPPED_HEADERS = {
 
 
 def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
-    if not isinstance(msg, EmailMessage):
-        msg = message2email(msg)
+    """
+    Convert a `Message` object to a `dict`.  All encoded text & bytes are
+    decoded into their natural values.
+
+    Need to examine a `Message` but find the builtin Python API too fiddly?
+    Need to check that a `Message` has the content & structure you expect?
+    Need to compare two `Message` instances for equality?  Need to pretty-print
+    the structure of a `Message`?  Then `email2dict()` has your back.
+
+    By default, any information specific to how the message is encoded
+    (:mailheader:`Content-Type` parameters,
+    :mailheader:`Content-Transfer-Encoding`, etc.) is not reported, as the
+    focus is on the actual content rather than the choices made in representing
+    it.  To include this information anyway, set ``include_all`` to `True`.
+    """
+
+    msg = message2email(msg)
     data: MessageDict = {
         "unixfrom": msg.get_unixfrom(),
         "headers": {},

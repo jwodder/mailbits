@@ -16,6 +16,15 @@ ENCODED_POLICY = policy.default.clone(utf8=False, max_line_length=0)
 
 @attr.s(auto_attribs=True)
 class ContentType:
+    """
+    The `ContentType` class provides a representation of a parsed Content-Type
+    header value.  Parse Content-Type strings with the `parse()` classmethod,
+    inspect the parts via the `content_type`, `maintype`, `subtype`, and
+    `params` attributes (the last three of which can be mutated), convert back
+    to a string with `str()`, and convert to ASCII bytes using encoded words
+    for non-ASCII with `bytes()`.
+    """
+
     maintype: str
     subtype: str
     params: Dict[str, Any] = attr.ib(factory=dict)
@@ -29,6 +38,7 @@ class ContentType:
 
     @property
     def content_type(self) -> str:
+        """ A string of the form "maintype/subtype" """
         return f"{self.maintype}/{self.subtype}"
 
     def __str__(self) -> str:
@@ -57,7 +67,13 @@ class ContentType:
 
 def format_addresses(addresses: Iterable[AddressOrGroup], encode: bool = False) -> str:
     """
-    Format a sequence of addresses for use in a custom address header string
+    Convert an iterable of e-mail address strings (of the form
+    "``foo@example.com``", without angle brackets or a display name),
+    `~email.headerregistry.Address` objects, and/or
+    `~email.headerregistry.Group` objects into a formatted string.  If
+    ``encode`` is `False` (the default), non-ASCII characters are left as-is.
+    If it is `True`, non-ASCII display names are converted into :RFC:`2047`
+    encoded words, and non-ASCII domain names are encoded using Punycode.
     """
     addrs = []
     for a in addresses:
@@ -85,12 +101,22 @@ def format_addresses(addresses: Iterable[AddressOrGroup], encode: bool = False) 
 
 
 def parse_address(s: str) -> Address:
+    """
+    Parse a single e-mail address — either a raw address like
+    "``foo@example.com``" or a combined display name & address like "``Fabian
+    Oh <foo@example.com>``" into an `Address` object.
+    """
     h = parse_header("Sender", s)
     assert isinstance(h, hr.SingleAddressHeader)
     return h.address
 
 
 def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Group]]:
+    """
+    Parse a formatted list of e-mail addresses or the contents of an
+    `EmailMessage`'s "To", "CC", "BCC", etc. header into a list of `Address`
+    and/or `Group` objects.
+    """
     if isinstance(s, str):
         h = parse_header("To", s)
         assert isinstance(h, hr.AddressHeader)
@@ -106,6 +132,11 @@ def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Grou
 
 
 def recipient_addresses(msg: EmailMessage) -> List[str]:
+    """
+    Return a sorted list of all of the distinct e-mail addresses (not including
+    display names) in an `EmailMessage`'s combined "To", "CC", and "BCC"
+    headers.
+    """
     recipients = set()
     for key in ["To", "CC", "BCC"]:
         for header in msg.get_all(key, []):
@@ -116,6 +147,14 @@ def recipient_addresses(msg: EmailMessage) -> List[str]:
 
 
 def message2email(msg: Message) -> EmailMessage:
+    """
+    Convert an instance of the old `Message` class (or one of its subclasses,
+    like a `mailbox` message class) to an instance of the new `EmailMessage`
+    class with the ``default`` policy.  If ``msg`` is already an
+    `EmailMessage`, it is returned unchanged.
+    """
+    if isinstance(msg, EmailMessage):
+        return msg
     # Message.as_bytes() refolds long header lines (which can result in changes
     # in whitespace after reparsing) and doesn't give a way to change this, so
     # we need to use a BytesGenerator manually.
