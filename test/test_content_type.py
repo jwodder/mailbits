@@ -28,6 +28,34 @@ from mailbits import ContentType
             "text/plain; charset*=utf-8''utf-%E2%98%83",
             ContentType("text", "plain", {"charset": "utf-\u2603"}),
         ),
+        (
+            "application/x-stuff; title*=us-ascii'en-us'This%20is%20%2A%2A%2Afun%2A%2A%2A",
+            ContentType("application", "x-stuff", {"title": "This is ***fun***"}),
+        ),
+        (
+            "application/x-stuff;"
+            "    title*0*=us-ascii'en'This%20is%20even%20more%20;"
+            "    title*1*=%2A%2A%2Afun%2A%2A%2A%20;"
+            '    title*2="isn\'t it!"',
+            ContentType(
+                "application",
+                "x-stuff",
+                {"title": "This is even more ***fun*** isn't it!"},
+            ),
+        ),
+        (
+            "message/external-body; access-type=URL;"
+            ' URL*0="ftp://";'
+            ' URL*1="cs.utk.edu/pub/moore/bulk-mailer/bulk-mailer.tar"',
+            ContentType(
+                "message",
+                "external-body",
+                {
+                    "access-type": "URL",
+                    "url": "ftp://cs.utk.edu/pub/moore/bulk-mailer/bulk-mailer.tar",
+                },
+            ),
+        ),
     ],
 )
 def test_parse_content_type(s: str, ct: ContentType) -> None:
