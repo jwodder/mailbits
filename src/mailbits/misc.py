@@ -59,8 +59,19 @@ def format_addresses(addresses: Iterable[AddressOrGroup], encode: bool = False) 
     """
     Format a sequence of addresses for use in a custom address header string
     """
+    addrs = []
+    for a in addresses:
+        if isinstance(a, str):
+            a = Address(addr_spec=a)
+        if encode:
+            if isinstance(a, Address):
+                a = idna_address(a)
+            else:
+                assert isinstance(a, Group)
+                a = Group(a.display_name, tuple(map(idna_address, a.addresses)))
+        addrs.append(a)
     msg = EmailMessage()
-    msg["To"] = [Address(addr_spec=a) if isinstance(a, str) else a for a in addresses]
+    msg["To"] = addrs
     if encode:
         folded = msg["To"].fold(policy=ENCODED_POLICY)
         assert isinstance(folded, str)
@@ -133,3 +144,11 @@ def parse_header(name: str, value: str) -> Any:
         # headers, but no...
         raise ValueError(value)
     return h
+
+
+def idna_address(addr: Address) -> Address:
+    return Address(
+        display_name=addr.display_name,
+        username=addr.username,
+        domain=addr.domain.encode("idna").decode("us-ascii"),
+    )
