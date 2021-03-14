@@ -1,6 +1,6 @@
 v0.2.0 (2021-03-13)
 -------------------
-- Renamed project to "mailbits"
+- Renamed project from "email2dict" to "mailbits"
 - Added a `ContentType` class
 - Exposed the `message2email()` function
 - Exposed the `MessageDict` type
