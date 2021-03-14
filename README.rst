@@ -21,6 +21,11 @@
 | `PyPI <https://pypi.org/project/email2dict/>`_
 | `Issues <https://github.com/jwodder/email2dict/issues>`_
 
+**Note:** This project has been renamed to mailbits_.  Please see there for all
+future updates & new features.
+
+.. _mailbits: https://pypi.org/project/mailbits/
+
 ``email2dict`` converts Python ``Message`` & ``EmailMessage`` instances into
 structured ``dict``\s.  Need to examine a ``Message`` but find the builtin
 Python API too fiddly?  Need to check that a ``Message`` has the content &
