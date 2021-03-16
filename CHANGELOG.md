@@ -1,5 +1,5 @@
-v0.2.1 (in development)
------------------------
+v0.2.1 (2021-03-16)
+-------------------
 - Change type of `ContentType.params` to `Dict[str, str]`
 
 v0.2.0 (2021-03-13)
