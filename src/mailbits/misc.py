@@ -27,7 +27,7 @@ class ContentType:
 
     maintype: str
     subtype: str
-    params: Dict[str, Any] = attr.ib(factory=dict)
+    params: Dict[str, str] = attr.ib(factory=dict)
 
     @classmethod
     def parse(cls, s: str) -> "ContentType":

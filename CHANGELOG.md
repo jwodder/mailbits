@@ -1,3 +1,7 @@
+v0.2.1 (in development)
+-----------------------
+- Change type of `ContentType.params` to `Dict[str, str]`
+
 v0.2.0 (2021-03-13)
 -------------------
 - Renamed project from "email2dict" to "mailbits"
