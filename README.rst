@@ -58,6 +58,12 @@ non-ASCII with ``bytes()``.
 ContentType(maintype='text', subtype='plain', params={'charset': 'utf-8', 'name': 'résumé.txt'})
 >>> ct.content_type
 'text/plain'
+>>> ct.maintype
+'text'
+>>> ct.subtype
+'plain'
+>>> ct.params
+{'charset': 'utf-8', 'name': 'résumé.txt'}
 >>> str(ct)
 'text/plain; charset="utf-8"; name="résumé.txt"'
 >>> bytes(ct)
