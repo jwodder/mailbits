@@ -12,7 +12,7 @@ recipients' raw e-mail addresses from an ``EmailMessage``.
 Visit <https://github.com/jwodder/mailbits> for more information.
 """
 
-__version__ = "0.2.1"
+__version__ = "0.3.0.dev1"
 __author__ = "John Thorvald Wodder II"
 __author_email__ = "mailbits@varonathe.org"
 __license__ = "MIT"
