@@ -69,6 +69,7 @@ def test_parse_content_type(s: str, ct: ContentType) -> None:
         "text/",
         "/plain",
         "text/plain, charset=utf-8",
+        "text/plain; charset=utf-8; charset=iso-8859-1",
     ],
 )
 def test_parse_content_type_error(s: str) -> None:
