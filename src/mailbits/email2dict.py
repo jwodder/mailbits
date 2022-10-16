@@ -1,9 +1,11 @@
+from __future__ import annotations
+from collections.abc import Callable
 from datetime import datetime
 from email import headerregistry as hr
 from email.message import Message
 import inspect
 import sys
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Optional
 from .misc import message2email, parse_addresses
 
 if sys.version_info[:2] >= (3, 8):
@@ -14,26 +16,26 @@ else:
 
 class MessageDict(TypedDict):
     unixfrom: Optional[str]
-    headers: Dict[str, Any]
+    headers: dict[str, Any]
     preamble: Optional[str]
     content: Any
     epilogue: Optional[str]
 
 
-def process_unique_string_header(ush: List[Any]) -> str:
+def process_unique_string_header(ush: list[Any]) -> str:
     assert len(ush) == 1
     return str(ush[0])
 
 
-def process_address(addr: hr.Address) -> Dict[str, str]:
+def process_address(addr: hr.Address) -> dict[str, str]:
     return {
         "display_name": addr.display_name,
         "address": addr.addr_spec,
     }
 
 
-def process_addr_headers(ahs: List[Any]) -> List[dict]:
-    data: List[dict] = []
+def process_addr_headers(ahs: list[Any]) -> list[dict]:
+    data: list[dict] = []
     for h in ahs:
         assert isinstance(h, hr.AddressHeader)
         for ag in parse_addresses(h):
@@ -56,8 +58,8 @@ SKIPPED_CT_PARAMS = {
 
 
 def process_content_type_headers(
-    cths: List[Any], include_all: bool = False
-) -> Dict[str, Any]:
+    cths: list[Any], include_all: bool = False
+) -> dict[str, Any]:
     assert len(cths) == 1
     return {
         "content_type": cths[0].content_type,
@@ -69,7 +71,7 @@ def process_content_type_headers(
     }
 
 
-def process_date_headers(dh: List[Any]) -> List[datetime]:
+def process_date_headers(dh: list[Any]) -> list[datetime]:
     data = []
     for h in dh:
         assert isinstance(h, hr.DateHeader)
@@ -77,19 +79,19 @@ def process_date_headers(dh: List[Any]) -> List[datetime]:
     return data
 
 
-def process_unique_date_header(dh: List[Any]) -> datetime:
+def process_unique_date_header(dh: list[Any]) -> datetime:
     assert len(dh) == 1
     assert isinstance(dh[0], hr.UniqueDateHeader)
     return dh[0].datetime
 
 
-def process_unique_single_addr_header(ah: List[Any]) -> Dict[str, str]:
+def process_unique_single_addr_header(ah: list[Any]) -> dict[str, str]:
     assert len(ah) == 1
     assert isinstance(ah[0], hr.UniqueSingleAddressHeader)
     return process_address(ah[0].address)
 
 
-def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
+def process_single_addr_header(ah: list[Any]) -> list[dict[str, str]]:
     data = []
     for h in ah:
         assert isinstance(h, hr.SingleAddressHeader)
@@ -97,7 +99,7 @@ def process_single_addr_header(ah: List[Any]) -> List[Dict[str, str]]:
     return data
 
 
-def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
+def process_content_disposition_header(cdh: list[Any]) -> dict[str, Any]:
     assert len(cdh) == 1
     assert isinstance(cdh[0], hr.ContentDispositionHeader)
     return {
@@ -106,19 +108,19 @@ def process_content_disposition_header(cdh: List[Any]) -> Dict[str, Any]:
     }
 
 
-def process_cte_header(cteh: List[Any]) -> str:
+def process_cte_header(cteh: list[Any]) -> str:
     assert len(cteh) == 1
     assert isinstance(cteh[0], hr.ContentTransferEncodingHeader)
     return cteh[0].cte  # TODO: When is this different from `str(cteh[0])`?
 
 
-def process_mime_version_header(mvh: List[Any]) -> Optional[str]:
+def process_mime_version_header(mvh: list[Any]) -> Optional[str]:
     assert len(mvh) == 1
     assert isinstance(mvh[0], hr.MIMEVersionHeader)
     return mvh[0].version
 
 
-HEADER_PROCESSORS: Dict[str, Callable] = {
+HEADER_PROCESSORS: dict[str, Callable] = {
     "subject": process_unique_string_header,
     "message-id": process_unique_string_header,
     "from": process_addr_headers,
@@ -147,7 +149,7 @@ SKIPPED_HEADERS = {
 }
 
 
-def email2dict(msg: Message, include_all: bool = False) -> "MessageDict":
+def email2dict(msg: Message, include_all: bool = False) -> MessageDict:
     """
     Convert a `Message` object to a `dict`.  All encoded text & bytes are
     decoded into their natural values.

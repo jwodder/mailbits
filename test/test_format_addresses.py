@@ -1,5 +1,5 @@
+from __future__ import annotations
 from email.headerregistry import Address, Group
-from typing import List, Union
 import pytest
 from mailbits import format_addresses
 
@@ -59,9 +59,7 @@ from mailbits import format_addresses
         ),
     ],
 )
-def test_format_addresses(
-    addresses: List[Union[str, Address, Group]], fmt: str
-) -> None:
+def test_format_addresses(addresses: list[str | Address | Group], fmt: str) -> None:
     assert format_addresses(addresses) == fmt
 
 
@@ -137,6 +135,6 @@ def test_format_addresses(
     ],
 )
 def test_format_addresses_encode(
-    addresses: List[Union[str, Address, Group]], fmt: str
+    addresses: list[str | Address | Group], fmt: str
 ) -> None:
     assert format_addresses(addresses, encode=True) == fmt

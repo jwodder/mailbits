@@ -1,5 +1,5 @@
+from __future__ import annotations
 from email.message import EmailMessage
-from typing import Dict, List
 import pytest
 from mailbits import recipient_addresses
 
@@ -70,7 +70,7 @@ from mailbits import recipient_addresses
         ),
     ],
 )
-def test_recipient_addresses(headers: Dict[str, str], addresses: List[str]) -> None:
+def test_recipient_addresses(headers: dict[str, str], addresses: list[str]) -> None:
     msg = EmailMessage()
     for k, v in headers.items():
         msg[k] = v

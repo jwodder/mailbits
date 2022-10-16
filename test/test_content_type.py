@@ -1,4 +1,4 @@
-from typing import Dict
+from __future__ import annotations
 import pytest
 from mailbits import ContentType
 
@@ -95,7 +95,7 @@ def test_parse_content_type_error(s: str) -> None:
     ],
 )
 def test_assemble_content_type(
-    maintype: str, subtype: str, params: Dict[str, str], ct: str
+    maintype: str, subtype: str, params: dict[str, str], ct: str
 ) -> None:
     assert str(ContentType(maintype, subtype, params)) == ct
 
@@ -122,7 +122,7 @@ def test_assemble_content_type(
     ],
 )
 def test_assemble_content_type_encoded(
-    maintype: str, subtype: str, params: Dict[str, str], ct: bytes
+    maintype: str, subtype: str, params: dict[str, str], ct: bytes
 ) -> None:
     assert bytes(ContentType(maintype, subtype, params)) == ct
 

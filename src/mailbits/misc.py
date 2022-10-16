@@ -1,3 +1,5 @@
+from __future__ import annotations
+from collections.abc import Iterable
 import email
 from email import headerregistry as hr
 from email import policy
@@ -6,7 +8,7 @@ from email.headerregistry import Address, Group
 from email.message import EmailMessage, Message
 from io import BytesIO
 from mailbox import MMDFMessage, mboxMessage
-from typing import Any, Dict, Iterable, List, Union
+from typing import Any, Union
 import attr
 
 AddressOrGroup = Union[str, Address, Group]
@@ -27,18 +29,18 @@ class ContentType:
 
     maintype: str
     subtype: str
-    params: Dict[str, str] = attr.ib(factory=dict)
+    params: dict[str, str] = attr.ib(factory=dict)
 
     @classmethod
-    def parse(cls, s: str) -> "ContentType":
-        """ Parse a :mailheader:`Content-Type` string """
+    def parse(cls, s: str) -> ContentType:
+        """Parse a :mailheader:`Content-Type` string"""
         ct = parse_header("Content-Type", s)
         assert isinstance(ct, hr.ContentTypeHeader)
         return cls(ct.maintype, ct.subtype, dict(ct.params))
 
     @property
     def content_type(self) -> str:
-        """ A string of the form "maintype/subtype" """
+        """A string of the form "maintype/subtype" """
         return f"{self.maintype}/{self.subtype}"
 
     def __str__(self) -> str:
@@ -111,7 +113,7 @@ def parse_address(s: str) -> Address:
     return h.address
 
 
-def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Group]]:
+def parse_addresses(s: str | hr.AddressHeader) -> list[Address | Group]:
     """
     Parse a formatted list of e-mail addresses or the contents of an
     `EmailMessage`'s "To", "CC", "BCC", etc. header into a list of `Address`
@@ -122,7 +124,7 @@ def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Grou
         assert isinstance(h, hr.AddressHeader)
     else:
         h = s
-    parsed: List[Union[Address, Group]] = []
+    parsed: list[Address | Group] = []
     for g in h.groups:
         if g.display_name is not None:
             parsed.append(g)
@@ -131,7 +133,7 @@ def parse_addresses(s: Union[str, hr.AddressHeader]) -> List[Union[Address, Grou
     return parsed
 
 
-def recipient_addresses(msg: EmailMessage) -> List[str]:
+def recipient_addresses(msg: EmailMessage) -> list[str]:
     """
     Return a sorted list of all of the distinct e-mail addresses (not including
     display names) in an `EmailMessage`'s combined "To", "CC", and "BCC"

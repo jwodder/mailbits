@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict
+from __future__ import annotations
+from collections.abc import Callable
+from typing import Any
 import pytest
 from mailbits.email2dict import takes_argument
 
@@ -11,7 +13,7 @@ def defaulting(foo: Any = None) -> Any:
     return foo
 
 
-def kwarged(**kwargs: Any) -> Dict[str, Any]:
+def kwarged(**kwargs: Any) -> dict[str, Any]:
     return kwargs
 
 

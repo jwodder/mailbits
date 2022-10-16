@@ -1,5 +1,5 @@
+from __future__ import annotations
 from email.headerregistry import Address, Group
-from typing import List, Union
 import pytest
 from mailbits import parse_addresses
 
@@ -51,5 +51,5 @@ from mailbits import parse_addresses
         ),
     ],
 )
-def test_parse_addresses(s: str, addresses: List[Union[Address, Group]]) -> None:
+def test_parse_addresses(s: str, addresses: list[Address | Group]) -> None:
     assert parse_addresses(s) == addresses
