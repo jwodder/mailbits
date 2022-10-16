@@ -1,5 +1,4 @@
 from email.headerregistry import Address, Group
-import sys
 from typing import List, Union
 import pytest
 from mailbits import format_addresses
@@ -91,13 +90,9 @@ def test_format_addresses(
             [Address("Zoe Facade", addr_spec="zoe.facade@naïveté.fr")],
             "Zoe Facade <zoe.facade@xn--navet-fsa2b.fr>",
         ),
-        pytest.param(
+        (
             [Address("Zoë Façade", addr_spec="zoe.facade@naïveté.fr")],
             "=?utf-8?q?Zo=C3=AB_Fa=C3=A7ade?= <zoe.facade@xn--navet-fsa2b.fr>",
-            marks=pytest.mark.xfail(
-                sys.version_info[:2] < (3, 7),
-                reason="Cannot encode non-ASCII display names on pre-Python 3.7",
-            ),
         ),
         (
             [
