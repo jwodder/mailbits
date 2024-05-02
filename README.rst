@@ -35,7 +35,7 @@ recipients' raw e-mail addresses from an ``EmailMessage``.
 
 Installation
 ============
-``mailbits`` requires Python 3.7 or higher.  Just use `pip
+``mailbits`` requires Python 3.8 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install it::
 
     python3 -m pip install mailbits
