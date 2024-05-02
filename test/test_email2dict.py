@@ -102,7 +102,9 @@ def test_text_html_attachment() -> None:
     )
     msg.add_alternative(HTML, subtype="html")
     IMG = b"\1\2\3\4\5"
-    msg.get_payload()[1].add_related(IMG, "image", "png", cid=asparagus_cid)
+    alt = msg.get_payload(1)
+    assert isinstance(alt, EmailMessage)
+    alt.add_related(IMG, "image", "png", cid=asparagus_cid)
     DICT: MessageDict = {
         "unixfrom": None,
         "headers": {
