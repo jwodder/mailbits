@@ -13,7 +13,8 @@ import attr
 
 AddressOrGroup = Union[str, Address, Group]
 
-ENCODED_POLICY = policy.default.clone(utf8=False, max_line_length=0)
+# <https://github.com/python/typeshed/issues/12852>
+ENCODED_POLICY = policy.default.clone(utf8=False, max_line_length=0)  # type: ignore[call-arg]
 
 
 @attr.s(auto_attribs=True)
