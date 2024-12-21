@@ -166,7 +166,10 @@ def message2email(msg: Message) -> EmailMessage:
     g = BytesGenerator(fp, mangle_from_=False, maxheaderlen=0)
     g.flatten(msg, unixfrom=msg.get_unixfrom() is not None)
     fp.seek(0)
-    emsg = email.message_from_binary_file(fp, policy=policy.default)
+    # <https://github.com/python/typeshed/issues/13273>
+    emsg = email.message_from_binary_file(
+        fp, policy=policy.default  # type: ignore[arg-type]
+    )
     assert isinstance(emsg, EmailMessage)
     # MMDFMessage and mboxMessage make their "From " lines available though a
     # different method than normal Messages, so we have to copy it over

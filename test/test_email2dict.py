@@ -211,7 +211,8 @@ def test_text_html_attachment() -> None:
 @pytest.mark.parametrize("eml", EMAIL_DIR.glob("*.eml"), ids=attrgetter("name"))
 def test_actual_emails(eml: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     with eml.open("rb") as fp:
-        msg = email.message_from_binary_file(fp, policy=policy.default)
+        # <https://github.com/python/typeshed/issues/13273>
+        msg = email.message_from_binary_file(fp, policy=policy.default)  # type: ignore[arg-type]
     monkeypatch.syspath_prepend(EMAIL_DIR)
     module: Any = import_module(eml.stem)
     assert email2dict(msg) == module.data
