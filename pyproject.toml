@@ -44,7 +44,6 @@ classifiers = [
 
 dependencies = [
     "attrs >= 18.1",
-    "typing_extensions; python_version < '3.8'",
 ]
 
 [project.urls]

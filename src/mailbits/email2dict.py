@@ -4,14 +4,8 @@ from datetime import datetime
 from email import headerregistry as hr
 from email.message import Message
 import inspect
-import sys
-from typing import Any, Optional
+from typing import Any, Optional, TypedDict
 from .misc import message2email, parse_addresses
-
-if sys.version_info[:2] >= (3, 8):
-    from typing import TypedDict
-else:
-    from typing_extensions import TypedDict
 
 
 class MessageDict(TypedDict):
