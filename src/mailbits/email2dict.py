@@ -4,16 +4,16 @@ from datetime import datetime
 from email import headerregistry as hr
 from email.message import Message
 import inspect
-from typing import Any, Optional, TypedDict
+from typing import Any, TypedDict
 from .misc import message2email, parse_addresses
 
 
 class MessageDict(TypedDict):
-    unixfrom: Optional[str]
+    unixfrom: str | None
     headers: dict[str, Any]
-    preamble: Optional[str]
+    preamble: str | None
     content: Any
-    epilogue: Optional[str]
+    epilogue: str | None
 
 
 def process_unique_string_header(ush: list[Any]) -> str:
@@ -108,7 +108,7 @@ def process_cte_header(cteh: list[Any]) -> str:
     return cteh[0].cte  # TODO: When is this different from `str(cteh[0])`?
 
 
-def process_mime_version_header(mvh: list[Any]) -> Optional[str]:
+def process_mime_version_header(mvh: list[Any]) -> str | None:
     assert len(mvh) == 1
     assert isinstance(mvh[0], hr.MIMEVersionHeader)
     return mvh[0].version
