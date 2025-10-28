@@ -78,11 +78,11 @@ b'text/plain; charset="utf-8"; name*=utf-8\'\'r%C3%A9sum%C3%A9.txt'
 .. code:: python
 
     class MessageDict(TypedDict):
-        unixfrom: Optional[str]
-        headers: Dict[str, Any]
-        preamble: Optional[str]
+        unixfrom: str | None
+        headers: dict[str, Any]
+        preamble: str | None
         content: Any
-        epilogue: Optional[str]
+        epilogue: str | None
 
     mailbits.email2dict(msg: email.message.Message, include_all: bool = False) -> MessageDict
 
@@ -300,7 +300,7 @@ __ https://docs.python.org/3/library/email.examples.html
 
 .. code:: python
 
-    mailbits.format_addresses(addresses: Iterable[Union[str, Address, Group]], encode: bool = False) -> str
+    mailbits.format_addresses(addresses: Iterable[str | Address | Group], encode: bool = False) -> str
 
 Convert an iterable of e-mail address strings (of the form
 "``foo@example.com``", without angle brackets or a display name),
@@ -341,8 +341,8 @@ into an ``Address`` object.
 
 .. code:: python
 
-    mailbits.parse_addresses(s: Union[str, email.headerregistry.AddressHeader]) \
-        -> List[Union[email.headerregistry.Address, email.headerregistry.Group]]
+    mailbits.parse_addresses(s: str | email.headerregistry.AddressHeader) \
+        -> list[email.headerregistry.Address | email.headerregistry.Group]
 
 Parse a formatted list of e-mail addresses or the contents of an
 ``EmailMessage``'s "To", "CC", "BCC", etc. header into a list of ``Address``
@@ -354,7 +354,7 @@ and/or ``Group`` objects.
 
 .. code:: python
 
-    mailbits.recipient_addresses(msg: email.message.EmailMessage) -> List[str]
+    mailbits.recipient_addresses(msg: email.message.EmailMessage) -> list[str]
 
 Return a sorted list of all of the distinct e-mail addresses (not including
 display names) in an ``EmailMessage``'s combined "To", "CC", and "BCC" headers.
