@@ -1,5 +1,5 @@
-v0.2.3 (in development)
------------------------
+v0.2.3 (2025-11-29)
+-------------------
 - Remove unused `typing_extensions` dependency
 - Support Python 3.14
 - Drop support for Python 3.8 and 3.9
