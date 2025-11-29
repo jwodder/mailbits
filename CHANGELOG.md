@@ -1,8 +1,11 @@
-v0.3.0 (in development)
+v0.2.3 (in development)
 -----------------------
 - Remove unused `typing_extensions` dependency
 - Support Python 3.14
 - Drop support for Python 3.8 and 3.9
+- `email2dict()`:
+    - Omit the `Date` header if the date cannot be parsed
+    - Omit the `Resent-Date` header if no dates can be parsed
 
 v0.2.2 (2024-12-01)
 -------------------

@@ -69,11 +69,12 @@ def process_date_headers(dh: list[Any]) -> list[datetime]:
     data = []
     for h in dh:
         assert isinstance(h, hr.DateHeader)
-        data.append(h.datetime)
+        if (dt := h.datetime) is not None:
+            data.append(dt)
     return data
 
 
-def process_unique_date_header(dh: list[Any]) -> datetime:
+def process_unique_date_header(dh: list[Any]) -> datetime | None:
     assert len(dh) == 1
     assert isinstance(dh[0], hr.UniqueDateHeader)
     return dh[0].datetime
@@ -184,7 +185,8 @@ def email2dict(msg: Message, include_all: bool = False) -> MessageDict:
             if takes_argument(processor, "include_all"):
                 kwargs["include_all"] = include_all
             v = processor(values, **kwargs)
-        data["headers"][header] = v
+        if v is not None and v != []:
+            data["headers"][header] = v
     data["preamble"] = msg.preamble
     if msg.get_content_maintype() == "message":
         # Some "message/*" subtypes (specifically, as of Python 3.9, rfc822 and
