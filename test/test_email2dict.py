@@ -208,7 +208,7 @@ def test_text_html_attachment() -> None:
     assert email2dict(msg, include_all=True) == DICT_ALL
 
 
-@pytest.mark.parametrize("eml", EMAIL_DIR.glob("*.eml"), ids=attrgetter("name"))
+@pytest.mark.parametrize("eml", list(EMAIL_DIR.glob("*.eml")), ids=attrgetter("name"))
 def test_actual_emails(eml: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     with eml.open("rb") as fp:
         # <https://github.com/python/typeshed/issues/13273>
@@ -219,7 +219,7 @@ def test_actual_emails(eml: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     assert email2dict(msg, include_all=True) == module.data_all
 
 
-@pytest.mark.parametrize("mbox", MBOX_DIR.glob("*.mbox"), ids=attrgetter("name"))
+@pytest.mark.parametrize("mbox", list(MBOX_DIR.glob("*.mbox")), ids=attrgetter("name"))
 def test_actual_mboxes(mbox: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     box = mailbox.mbox(mbox)
     box.lock()
