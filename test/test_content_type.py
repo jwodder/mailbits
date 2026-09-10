@@ -137,7 +137,7 @@ def test_assemble_content_type_encoded(
 )
 def test_assemble_content_type_error(maintype: str, subtype: str) -> None:
     with pytest.raises(ValueError) as excinfo:
-        str(ContentType(maintype, subtype))
+        str(ContentType(maintype, subtype))  # noqa: B018
     assert str(excinfo.value) == f"{maintype}/{subtype}"
     with pytest.raises(ValueError) as excinfo:
         bytes(ContentType(maintype, subtype))
